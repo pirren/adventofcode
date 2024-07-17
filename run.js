@@ -10,7 +10,7 @@ export default async function runAsync(year, day, part, output = true) {
     let file = `part${part}.js`;
 
     let startTime = moment();
-    let input = fs.readFileSync(`${url}/input.txt`, 'utf-8').trimEnd().split('\n');
+    let input = fs.readFileSync(`${url}/input.txt`, 'utf-8').trimEnd().split('\r\n');
     if (output) log(chalk.bgBlue(`${url}/${file} running...`));
     let answer = (await import(`${url}/${file}`)).default(input.length === 1 ? input[0] : input);
 

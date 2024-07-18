@@ -1,10 +1,10 @@
-import { expect } from 'chai'
+import { assert } from 'chai'
 import runAsync from '../run.js'
 
 describe('advent of code 2016', () => {
     async function test(day, part, expected) {
         const actual = await runAsync(2016, day, part, false)
-        return expect(actual).to.equal(expected);
+        return assert.equal(expected, actual)
     }
 
     it('day 01, part 1', () => test(1, 1, 271))
@@ -19,4 +19,6 @@ describe('advent of code 2016', () => {
     it('day 05, part 2', () => test(5, 2, '8c35d1ab'))
     it('day 06, part 1', () => test(6, 1, 'wkbvmikb'))
     it('day 06, part 2', () => test(6, 2, 'evakwaga'))
+    it('day 07, part 1', () => test(7, 1, 115))
+    it('day 07, part 2', () => test(7, 2, 231))
 })

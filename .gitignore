@@ -2,6 +2,10 @@
 **/sample.txt
 **/cache.json
 
+.vscode/
+
+desktop.ini
+
 # Logs
 logs
 *.log

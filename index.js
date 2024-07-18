@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import runAsync from './run.js'
 
-let [year, day, part] = [2016, 2, 1];
+let [year, day, part] = [2016, 2, 1]; // todo: default
 
 let args = _.compact([process.argv[2], process.argv[3], process.argv[4]])
 if (args.length === 3) {

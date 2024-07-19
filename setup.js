@@ -2,7 +2,6 @@ import _ from 'lodash'
 import fs from 'fs'
 import chalk from 'chalk'
 
-
 let [year, day] = [2016, 2, 1] // todo: default
 
 let args = _.compact([process.argv[2], process.argv[3]])

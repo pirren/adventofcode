@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash'
 import runAsync from './run.js'
 
 let [year, day, part] = [2016, 2, 1]; // todo: default

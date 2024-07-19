@@ -19,7 +19,7 @@ export default async function runAsync(year, day, part, output = true) {
             log(`${year}.${day}.${part} answer:`);
             log(JSON.stringify(answer));
         } else {
-            log(`${year}.${day}.${part} answer:\t`, answer)
+            log(`${year}.${day}.${part} answer:\t\t`, answer)
         }
     }
     let endTime = moment();

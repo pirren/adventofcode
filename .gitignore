@@ -1,6 +1,6 @@
 **/input.txt
 **/sample.txt
-**/cache.json
+**/cache*.json
 leaderboard_cache/
 
 .vscode/

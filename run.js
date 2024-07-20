@@ -11,8 +11,10 @@ export default async function runAsync(year, day, part, output = true) {
 
     let startTime = moment();
     let input = fs.readFileSync(`${url}/input.txt`, 'utf-8').trimEnd().split('\r\n')
+
     if (output) log(chalk.bgBlue(`${url}/${file} running...`))
-    let answer = (await import(`${url}/${file}`)).default(input.length === 1 ? input[0] : input)
+    let module = await import(`${url}/${file}`)
+    let answer = module.default(input.length === 1 ? input[0] : input)
 
     if (output) {
         if (_.isObject(answer) || _.isArray(answer)) {
@@ -24,6 +26,6 @@ export default async function runAsync(year, day, part, output = true) {
     }
     let endTime = moment()
 
-    if (output) log(`${year}.${day}.${part} time: \t\t\t`, moment(endTime.diff(startTime)).format('mm:ss:SSSSS'))
+    if (output) log(`${year}.${day}.${part} time: \t\t`, moment(endTime.diff(startTime)).format('mm:ss:SSSSS'))
     return answer
 }

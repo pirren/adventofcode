@@ -54,7 +54,6 @@ export default function solution (input) {
                 parentMap.set(neighbor.toString(), current)
             }
         }
-        
     }
 
     return []

@@ -33,10 +33,7 @@ export default function solution (input) {
         let [current, steps] = queue.shift()
         
         if (steps === maxSteps) continue
-        // if (current[0] === target[0] && current[1] === target[1]) {
-        //     return countSteps(current, parentMap)
-        // }
-
+        
         for(const neighbor of neighbors(current))
         {
             if (!visited.has(neighbor.toString())) {
@@ -45,7 +42,6 @@ export default function solution (input) {
                 parentMap.set(neighbor.toString(), current)
             }
         }
-        
     }
 
     return parentMap.size

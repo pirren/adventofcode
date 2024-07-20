@@ -17,7 +17,7 @@ const neighbors = (vertex) => {
         [x - 1, y],
         [x, y + 1],
         [x, y - 1]
-    ].filter(([nx, ny]) => isOpenSpace(nx, ny));
+    ].filter(([nx, ny]) => isOpenSpace(nx, ny))
 }
 
 const countSteps = (target, parentMap) => {

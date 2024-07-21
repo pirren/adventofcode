@@ -4,12 +4,9 @@ export default function alignsAt(input, extraDisc = null) {
     let discs = input.map(parseDisc)
     if (extraDisc) discs.push({ number: discs.length + 1, positions: extraDisc.positions, start: extraDisc.start })
     
-    let startTime = 0
-    while (true) {
-        if (checkAtTime(_.clone(discs), startTime)) 
-            return startTime
-        startTime++
-    }
+    let startTime = 0;
+    while (!alignsAtTime(_.clone(discs), startTime++));
+    return startTime - 1;
 }
 
 const parseDisc = (line) => {
@@ -17,12 +14,4 @@ const parseDisc = (line) => {
     return { number, positions, start }
 }
 
-const checkAtTime = (discs, time) => {
-    let passes = true
-    _.forEach(discs, disc => {
-        if ((disc.start + time + disc.number) % disc.positions !== 0) {
-            passes = false
-        }
-    })
-    return passes
-}
+const alignsAtTime = (discs, time) => discs.every(disc => (disc.start + time + disc.number) % disc.positions === 0)

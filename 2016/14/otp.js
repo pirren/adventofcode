@@ -11,14 +11,14 @@ export default function encrypt(salt, cacheFilePath, iterations) {
     // Part2 run time without persistent cache: 01:28:17900
     let persistentCache = fs.existsSync(cacheFilePath) ? JSON.parse(fs.readFileSync(cacheFilePath)) : []
     let cachedIndexes = _.clone(persistentCache)
-    let [index, jc] = cachedIndexes.length ? cachedIndexes.shift() : [0, undefined]
+    let [index, indexj] = cachedIndexes.length ? cachedIndexes.shift() : [0, undefined]
 
     while (found < 64) {
         hash = tempCache[index] || getHash(salt, index, iterations)
         tempCache[index] = hash
         let triplet = findTriplet(hash)
         if (triplet) {
-            for (let j = jc || (index + 1); j <= index + 1000; j++) {
+            for (let j = indexj || (index + 1); j <= index + 1000; j++) {
                 let nextHash = tempCache[j] || getHash(salt, j, iterations)
                 tempCache[j] = nextHash
                 if (findQuintuplet(triplet, nextHash)) {
@@ -31,7 +31,7 @@ export default function encrypt(salt, cacheFilePath, iterations) {
                 }
             }
         }
-        [index, jc] = cachedIndexes.length ? cachedIndexes.shift() : [index + 1, undefined]
+        [index, indexj] = cachedIndexes.length ? cachedIndexes.shift() : [index + 1, undefined]
     }
     return index - 1
 }

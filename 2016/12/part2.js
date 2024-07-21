@@ -1,5 +1,6 @@
 import { Interpreter } from "./interpreter.js"
 
 export default function solution (input) {
-    return new Interpreter().executeInstructions(input, { c : 1 })
+    let interpreter = new Interpreter()
+    return  interpreter.executeInstructions(input, {c : 1})
 }

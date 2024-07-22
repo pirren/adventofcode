@@ -25,16 +25,6 @@ export class BFSTraversal {
             [x, y - 1]
         ].filter(([nx, ny]) => this.#isOpenSpace(nx, ny))
     }
-    
-    #countSteps = (target, parentMap) => {
-        let steps = 0
-        let current = target
-        while (current) {
-            steps++
-            current = parentMap.get(current.toString())
-        }
-        return steps - 1
-    }
 
     traverse(start, target = [], maxSteps = Infinity) {
         let queue = [[start, 0]]
@@ -47,7 +37,7 @@ export class BFSTraversal {
             if (steps === maxSteps) continue
     
             if (target.length && current[0] === target[0] && current[1] === target[1]) {
-                return this.#countSteps(current, parentMap)
+                return steps
             }
     
             for(const neighbor of this.#neighbors(current))

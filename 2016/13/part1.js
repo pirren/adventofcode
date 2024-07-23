@@ -1,4 +1,4 @@
-import { BFSTraversal } from './BFSTraversal.js'
+import { BFSTraversal } from './bfs-traversal.js'
 
 export default function solution (input) {
     let bfs = new BFSTraversal(input)

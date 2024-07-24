@@ -14,7 +14,7 @@ export default async function runAsync(year, day, part, output = true) {
 
     if (output) log(chalk.bgBlue(`${url}/${file} running...`))
     let module = await import(`${url}/${file}`)
-    let answer = module.default(input.length === 1 ? input[0] : input)
+    let answer = await module.default(input.length === 1 ? input[0] : input)
 
     if (output) {
         if (_.isObject(answer) || _.isArray(answer)) {

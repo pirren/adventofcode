@@ -1,21 +1,6 @@
 import _ from 'lodash'
+import deliver from './deliver-presents.js'
 
 export default function solution (input) {
-    let instructions = input.split('')
-    let positions = [[0,0], [0,0]]
-    let seen = new Set([[0, 0].toString()])
-    const directions = { '^': [0, -1], 'v': [0, 1], '>': [1, 0], '<': [-1, 0] }
-
-    const move = (ins, pos) => {
-        let [x, y] = pos
-        let [dx, dy] = directions[ins]
-        return [x + dx, y + dy]
-    }
-    instructions.forEach((ins, index) => {
-        let santa = index % 2
-        positions[santa] = move(ins, positions[santa])
-        seen.add(positions[santa].toString())
-    }) 
-
-    return seen.size
+    return deliver(input, santa => santa % 2)
 }

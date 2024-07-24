@@ -8,6 +8,7 @@
     "start": "node index",
     "setup": "node setup",
     "test-2016": "mocha 2016/test.js --timeout 30000",
+    "test-2015": "mocha 2015/test.js --timeout 30000",
     "leaderboard": "node leaderboard"
   },
   "keywords": [],

@@ -17,4 +17,6 @@ describe('advent of code 2015', () => {
     it('day 04, part 2', () => test(4, 2, 3938038))
     it('day 05, part 1', () => test(5, 1, 255))
     it('day 05, part 2', () => test(5, 2, 55))
+    it('day 06, part 1', () => test(6, 1, 377891))
+    it('day 06, part 2', () => test(6, 2, 14110788))
 })

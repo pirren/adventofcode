@@ -18,12 +18,10 @@ export class Wire {
     }
 }
 
-export function simulate(input, wireConstructor, context = {}, targetWire = 'a') {
-    // let context = {}
-    // let targetWire = 'a'
+export function simulate(input, wireConstructor, context = {}) {
+    let targetWire = 'a'
 
     let wires = input.map(toEvaluable).map(([exp, name]) => wireConstructor(name, exp, context))
-    // let wires = input.map(toEvaluable).map(([exp, name]) => new Wire(name, exp, name === 'b' ? context['b'] : null))
 
     while (!context.hasOwnProperty(targetWire)) {
         let queue = wires.filter(wire => !wire.output)

@@ -30,14 +30,14 @@ export class BFSTraversal {
     traverse(start, target, keepLooking = false) {
         let queue = [[start, '']]
         let visited = new Set([start.toString()])
-        let longestPath = ''
+        let longestPathLength = 0
         
         while (queue.length) {
             let [current, path] = queue.shift()
     
             if (current[0] === target[0] && current[1] === target[1]) {
                 if (!keepLooking) return path
-                longestPath = path.length > longestPath.length ? path : longestPath
+                longestPathLength = Math.max(path.length, longestPathLength)
                 continue
             }
 
@@ -51,6 +51,6 @@ export class BFSTraversal {
                 queue.push([neighbor, path + this.#getDirection(current, neighbor)])
             }
         }
-        return longestPath.length
+        return longestPathLength
     }
 }

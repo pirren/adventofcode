@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import defaultDict from '../../lib/defaultdict.js'
+import { defaultDict } from '../../lib/dict.js'
 import { Bot } from './bot.js'
 
 export default function solution (input) {

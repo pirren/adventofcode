@@ -26,5 +26,13 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Decrypt input files
+      env:
+        DECRYPTION_KEY: ${{ secrets.INPUT_DECRYPTION_KEY }}
+      run: |
+        for file in $(find . -name "*.enc"); do
+          openssl enc -aes-256-cbc -d -in "$file" -out "${file%.enc}" -k "$DECRYPTION_KEY"
+        done
+
     - name: Run tests
       run: npm test

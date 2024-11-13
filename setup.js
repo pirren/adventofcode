@@ -1,3 +1,4 @@
+// Description: Create directories and files for a new day of Advent of Code
 import _ from 'lodash'
 import fs from 'fs'
 import chalk from 'chalk'

@@ -1,3 +1,4 @@
+// Description: Fetches the leaderboard data from Advent of Code API and displays it in a table format.
 import _ from 'lodash'
 import axios from 'axios'
 import dotenv from 'dotenv'

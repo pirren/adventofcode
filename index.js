@@ -1,3 +1,4 @@
+// Description: This file is the entry point for the CLI. It reads the arguments and runs the main function.
 import _ from 'lodash'
 import runAsync from './run.js'
 

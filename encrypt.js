@@ -21,7 +21,8 @@ function encryptFile(filePath) {
     const key = crypto.scryptSync(INPUT_DECRYPTION_KEY, 'salt', 32); // Derive a key from the password
 
     const cipher = crypto.createCipheriv(algorithm, key, iv);
-    const encrypted = Buffer.concat([iv, cipher.update(input), cipher.final()]); // Prepend IV to encrypted data
+    const encryptedContent = Buffer.concat([cipher.update(input), cipher.final()]);
+    const encrypted = Buffer.concat([iv, encryptedContent]);
 
     const encryptedPath = `${filePath}.enc`;
     fs.writeFileSync(encryptedPath, encrypted);

@@ -31,7 +31,16 @@ jobs:
         DECRYPTION_KEY: ${{ secrets.INPUT_DECRYPTION_KEY }}
       run: |
         for file in $(find . -name "*.enc"); do
-          openssl enc -aes-256-cbc -d -in "$file" -out "${file%.enc}" -k "$DECRYPTION_KEY"
+          # Decode from base64, extract IV and encrypted content
+          decoded_content=$(base64 -d "$file")
+          iv=$(echo "$decoded_content" | head -c 16 | xxd -p -c 32)
+          encrypted_data=$(echo "$decoded_content" | tail -c +17)
+
+          # Derive the key from the DECRYPTION_KEY and salt
+          key=$(echo -n "$DECRYPTION_KEY" | xxd -p -c 256)
+
+          # Use OpenSSL to decrypt
+          echo "$encrypted_data" | openssl enc -aes-256-cbc -d -K "$key" -iv "$iv" -out "${file%.enc}"
         done
 
     - name: Run tests

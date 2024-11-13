@@ -22,9 +22,10 @@ function encryptFile(filePath) {
 
     const cipher = crypto.createCipheriv(algorithm, key, iv);
     const encryptedContent = Buffer.concat([cipher.update(input), cipher.final()]);
-    const encrypted = Buffer.concat([iv, encryptedContent]);
 
+    const encrypted = Buffer.concat([iv, encryptedContent]).toString('base64');
     const encryptedPath = `${filePath}.enc`;
+
     fs.writeFileSync(encryptedPath, encrypted);
 
     console.log(`Encrypted ${filePath} -> ${encryptedPath}`);

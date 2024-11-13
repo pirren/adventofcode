@@ -1,5 +1,4 @@
 import { permute } from '../../lib/iter-tools.js' 
-import _ from 'lodash'
 
 export default function arrange (input, { addSelf = false } = {}) {
     let nodes = input.map(parse).reduce((acc, { left, score, right }) => {

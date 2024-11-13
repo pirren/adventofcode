@@ -7,9 +7,10 @@
   "scripts": {
     "start": "node index",
     "setup": "node setup",
-    "test-2016": "mocha 2016/test.js --timeout 30000",
+    "leaderboard": "node leaderboard",
+    "test": "mocha ./**/test.js --timeout 30000 --exclude './node_modules/**'",
     "test-2015": "mocha 2015/test.js --timeout 30000",
-    "leaderboard": "node leaderboard"
+    "test-2016": "mocha 2016/test.js --timeout 30000"
   },
   "keywords": [],
   "author": "",
@@ -22,8 +23,11 @@
     "js-combinatorics": "^2.1.2",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
-    "mocha": "^10.6.0",
     "moment": "^2.30.1",
     "tty-table": "^4.2.3"
+  },
+  "devDependencies": {
+    "chai": "^4.0.0",
+    "mocha": "^10.8.2"
   }
 }

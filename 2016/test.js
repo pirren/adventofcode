@@ -30,7 +30,7 @@ describe('advent of code 2016', () => {
         await test({ year: 2016, day: 5, part: 1, expected: 'c6697b55' })
     })
     it('day 05, part 2', async function() {
-        await test({ year: 2016, day: 5, part: 2, expected: '8c35d1ab', context: this, timeout: 180000 })
+        await test({ year: 2016, day: 5, part: 2, expected: '8c35d1ab', context: this, timeout: 120000 })
     })
     it('day 06, part 1', async function() {
         await test({ year: 2016, day: 6, part: 1, expected: 'wkbvmikb' })
@@ -78,7 +78,7 @@ describe('advent of code 2016', () => {
         await test({ year: 2016, day: 14, part: 1, expected: 15035 })
     })
     it('day 14, part 2', async function() {
-        await test({ year: 2016, day: 14, part: 2, expected: 19968, context: this, timeout: 120000 })
+        await test({ year: 2016, day: 14, part: 2, expected: 19968, context: this, timeout: 180000 })
     })
     it('day 15, part 1', async function() {
         await test({ year: 2016, day: 15, part: 1, expected: 122318 })

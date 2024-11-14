@@ -1,4 +1,4 @@
-export default function deploy (input, on, off, toggle) {
+export default function deploy(input, { on = () => 1, off = () => 0, toggle = undefined } = {}) { 
     let grid = getGrid()
     input.map(parse).forEach(([ins, x1, y1, x2, y2]) => {
         for (let y = y1; y <= y2; y++) {

@@ -2,7 +2,7 @@ import _ from 'lodash'
 import md5 from 'md5'
 import fs from 'fs'
 
-export default function encrypt(salt, startsWith, cacheFilePath) {
+export default function encrypt(salt, { startsWith = null, cacheFilePath = null } = {}) {
     let cache = fs.existsSync(cacheFilePath) ? JSON.parse(fs.readFileSync(cacheFilePath)) : []
     let index = cache.shift() || 1
     let hash = ''

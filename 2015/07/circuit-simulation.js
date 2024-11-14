@@ -1,5 +1,5 @@
 export class Wire {
-    constructor(name, exp, output = null){
+    constructor(name, exp, output = null) {
         this.name = name
         this.exp = exp
         this.output = output
@@ -18,7 +18,7 @@ export class Wire {
     }
 }
 
-export function simulate(input, wireConstructor, context = {}) {
+export function simulate(input, { wireConstructor = null, context = {} } = {}) {
     let targetWire = 'a'
 
     let wires = input.map(toEvaluable).map(([exp, name]) => wireConstructor(name, exp, context))

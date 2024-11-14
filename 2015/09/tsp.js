@@ -15,7 +15,7 @@ const calculateTotalDistance = (arr, map) => {
     return total
 }
 
-export default function tsp(input, target, comparer) {
+export default function tsp(input, { target = null, comparer = null } = {}) {
     let map = defaultDict(() => ({}))
     let locations = new Set()
 

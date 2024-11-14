@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 export default function solution (input) {
     return input.reduce((nice, line) => {
         let vowels = line.match(/[aeiou]/g)?.length > 2

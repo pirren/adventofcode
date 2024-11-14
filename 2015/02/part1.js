@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 export default function solution (input) {
     return input.reduce((paper, line) => {
         let [_, l, w, h] = /(\d+)x(\d+)x(\d+)/.exec(line).map(Number)

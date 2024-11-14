@@ -1,4 +1,4 @@
-export default function deliver(input, selectSanta) {
+export default function deliver(input, selectSanta = santa => 0) {
     let instructions = input.split('')
     let positions = [[0,0], [0,0]]
     let seen = new Set([[0, 0].toString()])

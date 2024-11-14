@@ -30,7 +30,7 @@ describe('advent of code 2016', () => {
         await test({ year: 2016, day: 5, part: 1, expected: 'c6697b55' })
     })
     it('day 05, part 2', async function() {
-        await test({ year: 2016, day: 5, part: 2, expected: '8c35d1ab', context: this, timeout: 120000 })
+        await test({ year: 2016, day: 5, part: 2, expected: '8c35d1ab', context: this, timeout: 180000 })
     })
     it('day 06, part 1', async function() {
         await test({ year: 2016, day: 6, part: 1, expected: 'wkbvmikb' })

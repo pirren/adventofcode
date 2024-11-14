@@ -1,8 +1,8 @@
-// Description: This file is the entry point for the CLI. It reads the arguments and runs the main function.
+// Description: This file is the entry point for the CLI. It reads the arguments and runs a single solution.
 import _ from 'lodash'
 import runAsync from './run.js'
 
-let [year, day, part] = [2016, 2, 1]; // todo: default
+let [year, day, part] = [2015, 14, 1]; // todo: default
 
 let args = _.compact([process.argv[2], process.argv[3], process.argv[4]])
 if (args.length === 3) {

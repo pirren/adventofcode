@@ -31,7 +31,20 @@ jobs:
         DECRYPTION_KEY: ${{ secrets.INPUT_DECRYPTION_KEY }}
       run: |
         for file in $(find . -name "*.enc"); do
-          openssl enc -aes-256-cbc -d -base64 -pbkdf2 -in "$file" -out "${file%.enc}" -k "$DECRYPTION_KEY"
+          # Set the paths for the intermediate and final output files
+          base64_file="${file%.enc}.b64"
+          output_file="${file%.enc}"
+
+          # Step 1: Decrypt the file into Base64 format
+          openssl enc -aes-256-cbc -d -base64 -pbkdf2 -in "$file" -out "$base64_file" -k "$DECRYPTION_KEY"
+          echo "Decrypted $file to Base64 output $base64_file"
+
+          # Step 2: Decode the Base64 content to get the original plain text
+          base64 -d "$base64_file" > "$output_file"
+          echo "Decoded Base64 content to final output $output_file"
+
+          # Optional: Clean up the intermediate Base64 file
+          rm "$base64_file"
         done
 
     - name: Run tests

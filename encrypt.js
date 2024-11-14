@@ -1,4 +1,4 @@
-
+// Description: Encrypts all input files using aes-256-cbc algorithm.
 import _ from 'lodash'
 import fs from 'fs'
 import path from 'path'
@@ -41,9 +41,37 @@ function encryptFile(filePath) {
     }
 }
 
+function decryptFile(filePath) {
+    const decryptedFilePath = filePath.replace(/\.enc$/, ''); // Remove ".enc" to get the decrypted output path
+    const decryptionKey = process.env.INPUT_DECRYPTION_KEY || 'your_decryption_key_here'; // Replace with your key or environment variable
+
+    try {
+        console.log(`Decrypting ${filePath}...`);
+        
+        // Run OpenSSL command to decrypt the file
+        execSync(`openssl enc -aes-256-cbc -d -base64 -pbkdf2 -k "${decryptionKey}" -in "${filePath}" -out "${decryptedFilePath}.b64"`);
+        
+        console.log(`Decrypted ${filePath} to ${decryptedFilePath}.b64`);
+
+        // Read the Base64-decoded file and convert it back to plain text
+        const base64Content = fs.readFileSync(`${decryptedFilePath}.b64`, 'utf-8');
+        const originalContent = Buffer.from(base64Content, 'base64').toString('utf-8');
+        
+        // Write the final plain text to the desired output file
+        fs.writeFileSync(decryptedFilePath, originalContent);
+        
+        console.log(`Decoded and saved final output to ${decryptedFilePath}`);
+        
+        // Optionally, delete the intermediate .b64 file
+        fs.unlinkSync(`${decryptedFilePath}.b64`);
+
+    } catch (error) {
+        console.error(`Failed to decrypt ${filePath}: ${error.message}`);
+    }
+}
+
 
 function encryptAllFiles() {
-    
     _.range(2015, currentYear + 1).forEach(year => {
         let yearFolder = year.toString();
         if (isDirectory(yearFolder)) {
@@ -62,5 +90,4 @@ function encryptAllFiles() {
         }
     });
 }
-
 encryptAllFiles();

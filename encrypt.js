@@ -3,7 +3,8 @@ import _ from 'lodash'
 import fs from 'fs'
 import path from 'path'
 import dotenv from 'dotenv'
-import crypto from 'crypto'
+import os from 'os';
+import { execSync } from 'child_process'
 
 const algorithm = 'aes-256-cbc'
 
@@ -16,20 +17,30 @@ const { INPUT_DECRYPTION_KEY } = process.env
 const isDirectory = dirPath => fs.existsSync(dirPath) && fs.lstatSync(dirPath).isDirectory();
 
 function encryptFile(filePath) {
-    const input = fs.readFileSync(filePath);
-    const iv = crypto.randomBytes(16); // Generate a random IV for each file
-    const key = crypto.scryptSync(INPUT_DECRYPTION_KEY, 'salt', 32); // Derive a key from the password
+    const input = fs.readFileSync(filePath); // Read the file content
 
-    const cipher = crypto.createCipheriv(algorithm, key, iv);
-    const encryptedContent = Buffer.concat([cipher.update(input), cipher.final()]);
-
-    const encrypted = Buffer.concat([iv, encryptedContent]).toString('base64');
-    const encryptedPath = `${filePath}.enc`;
-
-    fs.writeFileSync(encryptedPath, encrypted);
-
-    console.log(`Encrypted ${filePath} -> ${encryptedPath}`);
+    // Create a temporary file to store the base64-encoded content
+    const tempBase64File = path.join(os.tmpdir(), `${path.basename(filePath)}.base64`);
+    const encryptedFilePath = `${filePath}.enc`;
+  
+    try {
+      console.log(`Encrypting ${filePath}...`);
+  
+      // Create the base64-encoded file
+      fs.writeFileSync(tempBase64File, input.toString('base64'));
+  
+      // Run OpenSSL command to encrypt the file using aes-256-cbc, using the base64-encoded file as input
+      execSync(`openssl enc -${algorithm} -e -base64 -pbkdf2 -k "${INPUT_DECRYPTION_KEY}" -in "${tempBase64File}" -out "${encryptedFilePath}"`);
+  
+      console.log(`Encrypted ${filePath} to ${encryptedFilePath}`);
+  
+      // Remove the temporary base64 file
+      fs.unlinkSync(tempBase64File);
+    } catch (error) {
+      console.error(`Failed to encrypt ${filePath}: ${error.message}`);
+    }
 }
+
 
 function encryptAllFiles() {
     

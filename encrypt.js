@@ -17,30 +17,31 @@ const { INPUT_DECRYPTION_KEY } = process.env
 const isDirectory = dirPath => fs.existsSync(dirPath) && fs.lstatSync(dirPath).isDirectory();
 
 function encryptFile(filePath) {
-    const input = fs.readFileSync(filePath); // Read the file content
+    const input = fs.readFileSync(filePath);
 
-    // Create a temporary file to store the base64-encoded content
+    // -- Create a temporary file to store the base64-encoded content
     const tempBase64File = path.join(os.tmpdir(), `${path.basename(filePath)}.base64`);
     const encryptedFilePath = `${filePath}.enc`;
   
     try {
       console.log(`Encrypting ${filePath}...`);
   
-      // Create the base64-encoded file
+      // -- Create the base64-encoded file
       fs.writeFileSync(tempBase64File, input.toString('base64'));
   
-      // Run OpenSSL command to encrypt the file using aes-256-cbc, using the base64-encoded file as input
+      // -- Run OpenSSL command to encrypt the file using aes-256-cbc, using the base64-encoded file as input
       execSync(`openssl enc -${algorithm} -e -base64 -pbkdf2 -k "${INPUT_DECRYPTION_KEY}" -in "${tempBase64File}" -out "${encryptedFilePath}"`);
   
       console.log(`Encrypted ${filePath} to ${encryptedFilePath}`);
   
-      // Remove the temporary base64 file
+      // -- Remove the temporary base64 file
       fs.unlinkSync(tempBase64File);
     } catch (error) {
       console.error(`Failed to encrypt ${filePath}: ${error.message}`);
     }
 }
 
+// TODO: Implement this function later
 function decryptFile(filePath) {
     const decryptedFilePath = filePath.replace(/\.enc$/, ''); // Remove ".enc" to get the decrypted output path
     const decryptionKey = process.env.INPUT_DECRYPTION_KEY || 'your_decryption_key_here'; // Replace with your key or environment variable
@@ -48,21 +49,21 @@ function decryptFile(filePath) {
     try {
         console.log(`Decrypting ${filePath}...`);
         
-        // Run OpenSSL command to decrypt the file
+        // -- Run OpenSSL command to decrypt the file
         execSync(`openssl enc -aes-256-cbc -d -base64 -pbkdf2 -k "${decryptionKey}" -in "${filePath}" -out "${decryptedFilePath}.b64"`);
         
         console.log(`Decrypted ${filePath} to ${decryptedFilePath}.b64`);
 
-        // Read the Base64-decoded file and convert it back to plain text
+        // -- Read the Base64-decoded file and convert it back to plain text
         const base64Content = fs.readFileSync(`${decryptedFilePath}.b64`, 'utf-8');
         const originalContent = Buffer.from(base64Content, 'base64').toString('utf-8');
         
-        // Write the final plain text to the desired output file
+        // -- Write the final plain text to the desired output file
         fs.writeFileSync(decryptedFilePath, originalContent);
         
         console.log(`Decoded and saved final output to ${decryptedFilePath}`);
         
-        // Optionally, delete the intermediate .b64 file
+        // -- Optionally, delete the intermediate .b64 file
         fs.unlinkSync(`${decryptedFilePath}.b64`);
 
     } catch (error) {
@@ -70,16 +71,18 @@ function decryptFile(filePath) {
     }
 }
 
-
-function encryptAllFiles() {
+function encryptAllInputFiles() {
+    // Loop through each year folder
     _.range(2015, currentYear + 1).forEach(year => {
         let yearFolder = year.toString();
         if (isDirectory(yearFolder)) {
+            // Get all subfolders in the year folder
             const subFolders = fs.readdirSync(yearFolder).filter(subFolder => {
                 const subFolderPath = path.join(yearFolder, subFolder);
                 return isDirectory(subFolderPath);
             });
 
+            // Loop through each subfolder and encrypt all .txt files
             subFolders.forEach(subFolder => {
                 const subFolderPath = path.join(yearFolder, subFolder);
                 
@@ -90,4 +93,5 @@ function encryptAllFiles() {
         }
     });
 }
-encryptAllFiles();
+
+encryptAllInputFiles();

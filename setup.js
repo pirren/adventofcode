@@ -46,9 +46,14 @@ if (fs.existsSync(testPath)) {
     console.log(`Creating unit tests...`)
     let tests = fs.readFileSync(testPath, 'utf-8').split('\n')
     tests.splice(tests.length - 1, 0, 
-        `    it('day ${dayFormatted}, part 1', () => test(${day}, 1, 12345))`,
-        `    it('day ${dayFormatted}, part 2', () => test(${day}, 2, 12345))`
+`    it('day ${dayFormatted}, part 1', async function() {
+        await test({ year: ${year}, day: ${day}, part: 1, expected: 12345 })
+    })`,
+`    it('day ${dayFormatted}, part 2', async function() {
+        await test({ year: ${year}, day: ${day}, part: 2, expected: 12345 })
+    })`
     )
     fs.writeFileSync(testPath, tests.join('\n'))
 }
 console.log('Done.')
+

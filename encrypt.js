@@ -12,13 +12,10 @@ dotenv.config() // Reads the .env file and merges it into process.env
 
 const { INPUT_DECRYPTION_KEY } = process.env
 
-// const isDirectory = dirPath => fs.existsSync(dirPath) && fs.lstatSync(dirPath).isDirectory();
 const isDirectory = dirPath => fs.existsSync(dirPath) && fs.lstatSync(dirPath).isDirectory();
 const isYear = value => /([0-9]{4})/.test(value);
 const isValidFile = filePath => /\.(txt|json)$/i.test(filePath);
 const isEncryptedFile = filePath => filePath.endsWith('.enc');
-
-isEncryptedFile
 
 function encryptFile(filePath) {
     const input = fs.readFileSync(filePath);

@@ -10,11 +10,15 @@ const algorithm = 'aes-256-cbc'
 
 dotenv.config() // Reads the .env file and merges it into process.env
 
-let currentYear = new Date().getFullYear()
-
 const { INPUT_DECRYPTION_KEY } = process.env
 
+// const isDirectory = dirPath => fs.existsSync(dirPath) && fs.lstatSync(dirPath).isDirectory();
 const isDirectory = dirPath => fs.existsSync(dirPath) && fs.lstatSync(dirPath).isDirectory();
+const isYear = value => /([0-9]{4})/.test(value);
+const isValidFile = filePath => /\.(txt|json)$/i.test(filePath);
+const isEncryptedFile = filePath => filePath.endsWith('.enc');
+
+isEncryptedFile
 
 function encryptFile(filePath) {
     const input = fs.readFileSync(filePath);
@@ -72,25 +76,34 @@ function decryptFile(filePath) {
 }
 
 function encryptAllInputFiles() {
-    // Loop through each year folder
-    _.range(2015, currentYear + 1).forEach(year => {
-        let yearFolder = year.toString();
-        if (isDirectory(yearFolder)) {
-            // Get all subfolders in the year folder
-            const subFolders = fs.readdirSync(yearFolder).filter(subFolder => {
-                const subFolderPath = path.join(yearFolder, subFolder);
-                return isDirectory(subFolderPath);
-            });
+    // -- Loop through each year and day folder and encrypt input and cache files
+    let root = './';
+    fs.readdirSync(root).filter(isDirectory).filter(isYear).forEach(year => {
+        let subFolders = fs.readdirSync(year).filter(item => {
+            const itemPath = path.join(year, item);
+            return isDirectory(itemPath);
+        });
 
-            // Loop through each subfolder and encrypt all .txt files
-            subFolders.forEach(subFolder => {
-                const subFolderPath = path.join(yearFolder, subFolder);
-                
-                const txtFiles = fs.readdirSync(subFolderPath).filter(file => file.endsWith('.txt')).map(x => path.join(subFolderPath, x));
+        subFolders.forEach(dayFolder => {
+            const subFolderPath = path.join(year, dayFolder);
 
-                txtFiles.forEach(encryptFile);
-            });
-        }
+            // -- Get all encrypted files. No need to encrypt them again
+            let allFiles = fs.readdirSync(subFolderPath);
+            const encryptedFiles = new Set(
+                allFiles.filter(isEncryptedFile)
+                .map(file => path.join(subFolderPath, file)
+                .slice(0, -4)) // Remove the .enc extension
+            ); 
+
+            // -- Get all files that need to be encrypted
+            const filesToEncrypt = allFiles
+                .filter(isValidFile)
+                .map(file => path.join(subFolderPath, file))
+                .filter(file => !encryptedFiles.has(file)); 
+
+            // -- Encrypt each file
+            filesToEncrypt.forEach(encryptFile);
+        });
     });
 }
 

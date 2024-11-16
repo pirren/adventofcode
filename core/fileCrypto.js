@@ -1,9 +1,15 @@
-// Description: Encrypts all input files using aes-256-cbc algorithm.
+/**
+ * fileCrypto.js
+ *
+ * Description: Encrypts and decrypts files using the aes-256-cbc algorithm.
+ */
+
 import _ from 'lodash'
 import fs from 'fs'
 import path from 'path'
 import dotenv from 'dotenv'
 import os from 'os';
+import chalk from 'chalk'
 import { execSync } from 'child_process'
 
 const algorithm = 'aes-256-cbc'
@@ -11,11 +17,6 @@ const algorithm = 'aes-256-cbc'
 dotenv.config() // Reads the .env file and merges it into process.env
 
 const { INPUT_DECRYPTION_KEY } = process.env
-
-const isDirectory = dirPath => fs.existsSync(dirPath) && fs.lstatSync(dirPath).isDirectory();
-const isYear = value => /([0-9]{4})/.test(value);
-const isValidFile = filePath => /\.(txt|json)$/i.test(filePath);
-const isEncryptedFile = filePath => filePath.endsWith('.enc');
 
 function encryptFile(filePath) {
     const input = fs.readFileSync(filePath);
@@ -42,16 +43,14 @@ function encryptFile(filePath) {
     }
 }
 
-// TODO: Implement this function later
 function decryptFile(filePath) {
     const decryptedFilePath = filePath.replace(/\.enc$/, ''); // Remove ".enc" to get the decrypted output path
-    const decryptionKey = process.env.INPUT_DECRYPTION_KEY || 'your_decryption_key_here'; // Replace with your key or environment variable
 
     try {
         console.log(`Decrypting ${filePath}...`);
         
         // -- Run OpenSSL command to decrypt the file
-        execSync(`openssl enc -aes-256-cbc -d -base64 -pbkdf2 -k "${decryptionKey}" -in "${filePath}" -out "${decryptedFilePath}.b64"`);
+        execSync(`openssl enc -aes-256-cbc -d -base64 -pbkdf2 -k "${INPUT_DECRYPTION_KEY}" -in "${filePath}" -out "${decryptedFilePath}.b64"`);
         
         console.log(`Decrypted ${filePath} to ${decryptedFilePath}.b64`);
 
@@ -62,7 +61,7 @@ function decryptFile(filePath) {
         // -- Write the final plain text to the desired output file
         fs.writeFileSync(decryptedFilePath, originalContent);
         
-        console.log(`Decoded and saved final output to ${decryptedFilePath}`);
+        console.log(chalk.green(`Decoded and saved final output to ${decryptedFilePath}`));
         
         // -- Optionally, delete the intermediate .b64 file
         fs.unlinkSync(`${decryptedFilePath}.b64`);
@@ -72,36 +71,53 @@ function decryptFile(filePath) {
     }
 }
 
-function encryptAllInputFiles() {
-    // -- Loop through each year and day folder and encrypt input and cache files
-    let root = './';
-    fs.readdirSync(root).filter(isDirectory).filter(isYear).forEach(year => {
-        let subFolders = fs.readdirSync(year).filter(item => {
+// -- Returns all files in solution directories ("./YEAR/DAY/") of types [.txt, .json, .enc]
+function getAllFiles() {
+    const isDirectory = dirPath => fs.existsSync(dirPath) && fs.lstatSync(dirPath).isDirectory();
+    const isYear = value => /([0-9]{4})/.test(value);
+    const isSolutionDataFile = filePath => /\.(txt|json|enc)$/i.test(filePath);
+
+    // -- Loop through each year and day folder
+    const root = './';
+    return fs.readdirSync(root).filter(isDirectory).filter(isYear).map(year => {
+        const subFolders = fs.readdirSync(year).filter(item => {
             const itemPath = path.join(year, item);
             return isDirectory(itemPath);
         });
 
-        subFolders.forEach(dayFolder => {
+        return subFolders.map(dayFolder => {
             const subFolderPath = path.join(year, dayFolder);
-
-            // -- Get all encrypted files. No need to encrypt them again
-            let allFiles = fs.readdirSync(subFolderPath);
-            const encryptedFiles = new Set(
-                allFiles.filter(isEncryptedFile)
-                .map(file => path.join(subFolderPath, file)
-                .slice(0, -4)) // Remove the .enc extension
-            ); 
-
-            // -- Get all files that need to be encrypted
-            const filesToEncrypt = allFiles
-                .filter(isValidFile)
-                .map(file => path.join(subFolderPath, file))
-                .filter(file => !encryptedFiles.has(file)); 
-
-            // -- Encrypt each file
-            filesToEncrypt.forEach(encryptFile);
+            return fs.readdirSync(subFolderPath).filter(isSolutionDataFile).map(file => path.join(subFolderPath, file));
         });
     });
 }
 
-encryptAllInputFiles();
+const encryptedFileTypes = filePath => filePath.endsWith('.enc');
+const notEncryptedFileTypes = filePath => /\.(txt|json)$/i.test(filePath);
+
+// -- Decrypts all files with the .enc extension
+export function decryptFiles() {
+    console.log(chalk.bgCyan('Decrypting files...'));
+    const files = _.flattenDeep(getAllFiles()).filter(encryptedFileTypes);
+    files.forEach(decryptFile);
+    console.log(chalk.bgCyan('Decryption complete.'));
+}
+
+// -- Encrypts all files with the .txt or .json extension (except those that are already encrypted)
+export function encryptFiles() {
+    console.log(chalk.bgCyan('Encrypting files...'));
+    const allFiles = _.flattenDeep(getAllFiles());
+
+    // -- Get all encrypted files. No need to encrypt them again
+    const encryptedFiles = new Set(
+        allFiles.filter(encryptedFileTypes).map(file => file.slice(0, -4)) // Remove the .enc extension
+    ); 
+    
+    // -- Get all files that need to be encrypted (i.e., not already encrypted)
+    const filesToEncrypt = allFiles
+        .filter(notEncryptedFileTypes)
+        .filter(file => !encryptedFiles.has(file)); 
+
+    filesToEncrypt.forEach(encryptFile);
+    console.log(chalk.bgCyan('Encryption complete.'));
+}

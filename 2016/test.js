@@ -1,5 +1,5 @@
 // Description: Tests for Advent of Code 2016 solutions.
-import { test } from '../lib/test.js'
+import test from '../core/test.js'
 
 describe('advent of code 2016', () => {
     it('day 01, part 1', async function() { 

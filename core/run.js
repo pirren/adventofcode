@@ -29,6 +29,7 @@ export default async function runAsync({year = 2015, day = 1, part = 1, output =
     if (output) {
         console.log(`Running ${year}.${day}.${part}`)
     } 
+    
     let module = await import(pathToFileURL(path.resolve(filePath, solutionFile)))
     let answer = await module.default(input.length === 1 ? input[0] : input)
 

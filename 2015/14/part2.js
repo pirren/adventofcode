@@ -1,6 +1,10 @@
 import { fly, parse } from './fly.js'
 import _ from 'lodash'
 
+export const metadata = {
+    "Puzzle Name": "Reindeer Olympics"
+}
+
 export default function solution (input) {
     let contestants = input.map(parse);
     let scores = new Array(contestants.length).fill(0);

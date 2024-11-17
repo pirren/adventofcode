@@ -1,3 +1,7 @@
+export const metadata = {
+    "Puzzle Name": "Doesn't He Have Intern-Elves For This?"
+}
+
 export default function solution (input) {
     return input.reduce((nice, line) => {
         let vowels = line.match(/[aeiou]/g)?.length > 2

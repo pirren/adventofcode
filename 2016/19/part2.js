@@ -1,4 +1,6 @@
-import _ from 'lodash'
+export const metadata = {
+    "Puzzle Name": "An Elephant Named Joseph"
+}
 
 export default function solution (input) {
     return josephus(+input, 2)

@@ -1,5 +1,9 @@
 import _ from 'lodash'
 
+export const metadata = {
+    "Puzzle Name": "Squares With Three Sides"
+}
+
 export default function solution (input) {
     return input.reduce((valid, line) => {
         let [a, b, c] = _.compact(line.split(' ').map(x => parseInt(x, 10)))

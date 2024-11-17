@@ -2,6 +2,10 @@ import _ from 'lodash'
 import md5 from 'md5'
 import fs from 'fs'
 
+export const metadata = {
+    "Puzzle Name": "How About a Nice Game of Chess?"
+}
+
 export default function solution (input) {
     let cache = fs.existsSync('./2016/05/cache.json') ? JSON.parse(fs.readFileSync('./2016/05/cache.json')) : [];
     let password = ''

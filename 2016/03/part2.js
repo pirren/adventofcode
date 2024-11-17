@@ -1,5 +1,9 @@
 import _ from 'lodash'
 
+export const metadata = {
+    "Puzzle Name": "Squares With Three Sides"
+}
+
 const rot90 = (matrix) => _.map(matrix[0], (_, index) => matrix.map(row => row[index]).reverse())
 
 export default function solution (input) {

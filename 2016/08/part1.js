@@ -1,5 +1,9 @@
 import _ from 'lodash'
 
+export const metadata = {
+    "Puzzle Name": "Two-Factor Authentication"
+}
+
 const power = (display, width, height) => {
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {

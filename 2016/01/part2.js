@@ -1,5 +1,9 @@
 import _ from 'lodash'
 
+export const metadata = {
+    "Puzzle Name": "No Time for a Taxicab"
+}
+
 export default function solution (input) {
     let instructions = _.split(input, ', ')
     let [dir_x, dir_y] = [0, -1]

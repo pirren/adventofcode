@@ -2,6 +2,10 @@ import _ from 'lodash'
 import { defaultDict } from '../../lib/dict.js'
 import { Bot } from './bot.js'
 
+export const metadata = {
+    "Puzzle Name": "Balance Bots"
+}
+
 export default function solution (input) {
     let bots = defaultDict(x => new Bot(x))
 

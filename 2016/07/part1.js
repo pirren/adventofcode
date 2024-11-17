@@ -1,6 +1,10 @@
 import _ from 'lodash'
 import extractAddressData from './extract.js'
 
+export const metadata = {
+    "Puzzle Name": "Internet Protocol Version 7"
+}
+
 const abba = (sequence) => {
     for (let i = 0; i <= sequence.length - 4; i++) {
         let [a, b, c, d] = sequence.slice(i, i + 4)

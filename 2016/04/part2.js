@@ -1,5 +1,9 @@
 import _ from 'lodash'
 
+export const metadata = {
+    "Puzzle Name": "Security Through Obscurity"
+}
+
 export default function solution (input) {
     return _.reduce(input, (result, line) => {
         const match = /^([a-z-]+)-(\d+)\[([a-z]+)\]$/.exec(line)

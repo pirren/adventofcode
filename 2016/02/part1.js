@@ -1,5 +1,9 @@
 import _ from 'lodash'
 
+export const metadata = {
+    "Puzzle Name": "Bathroom Security"
+}
+
 export default function solution (input) {
     let directions = { 'U': [0, -1], 'R': [1, 0], 'D': [0, 1], 'L': [-1, 0] }
     let position = [ 1, 1 ]

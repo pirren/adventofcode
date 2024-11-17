@@ -8,7 +8,8 @@
     "start": "node index",
     "setup": "node scripts/setup",
     "leaderboard": "node scripts/leaderboard",
-    "crypt": "node scripts/crypt",
+    "encrypt": "node scripts/encrypt",
+    "decrypt": "node scripts/decrypt",
     "test": "mocha ./**/test.js --timeout 30000 --exclude './node_modules/**'",
     "test-2015": "mocha 2015/test.js --timeout 30000",
     "test-2016": "mocha 2016/test.js --timeout 30000"

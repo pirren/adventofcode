@@ -33,28 +33,35 @@ export default function setup({ year = null, day = null } = {}) {
     fs.mkdirSync(dir)
     fs.writeFileSync(`${dir}/input.txt`, '12345')
     
-    // Create code
+    // -- Create code
     console.log(`Creating code for parts 1 and 2...`)
     let func = `import _ from 'lodash'\n\nexport default function solution (input) {\n    return input\n}`
     
     fs.writeFileSync(`${dir}/part1.js`, func)
     fs.writeFileSync(`${dir}/part2.js`, func)
     
-    // Create tests
+    // -- Create tests
     let testPath = `./${year}/test.js`
-    if (fs.existsSync(testPath)) {
-        console.log(`Creating unit tests...`)
-        let tests = fs.readFileSync(testPath, 'utf-8').split('\n')
-        tests.splice(tests.length - 1, 0, 
+    if (!fs.existsSync(testPath)) {
+        console.log(`Creating test file...`)
+        fs.writeFileSync(testPath, `// Description: Tests for Advent of Code ${year} solutions.
+import test from '../core/test.js'
+
+describe('advent of code ${year}', () => {
+})`)
+    }
+
+    console.log(`Creating unit tests...`)
+    let tests = fs.readFileSync(testPath, 'utf-8').split('\n')
+    tests.splice(tests.length - 1, 0, 
 `    it('day ${dayFormatted}, part 1', async function() {
         await test({ year: ${year}, day: ${day}, part: 1, expected: 12345 })
     })`,
 `    it('day ${dayFormatted}, part 2', async function() {
         await test({ year: ${year}, day: ${day}, part: 2, expected: 12345 })
-    })`
-        )
-        fs.writeFileSync(testPath, tests.join('\n'))
-    }
-    console.log(chalk.green('Setup complete.'))
+    })`)
+    fs.writeFileSync(testPath, tests.join('\n'))
     
+
+    console.log(chalk.green('Setup complete.'))
 }

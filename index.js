@@ -2,7 +2,7 @@
 import _ from 'lodash'
 import runAsync from './core/run.js'
 
-const [ year = 2015, day = 1, part = 1 ] = process.argv.slice(2)
+const [ year = 2015, day = 15, part = 1 ] = process.argv.slice(2)
     .map(Number)
     .slice(0, 3)
 

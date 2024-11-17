@@ -86,4 +86,10 @@ describe('advent of code 2015', () => {
     it('day 14, part 2', async function() {
         await test({ year: 2015, day: 14, part: 2, expected: 1256 })
     })
+    it('day 15, part 1', async function() {
+        await test({ year: 2015, day: 15, part: 1, expected: 21367368 })
+    })
+    it('day 15, part 2', async function() {
+        await test({ year: 2015, day: 15, part: 2, expected: 1766400 })
+    })
 })

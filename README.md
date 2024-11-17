@@ -59,7 +59,7 @@ The project includes several npm scripts:
 | `npm run decrypt`              | Decrypts all encrypted input files            |
 | `npm run leaderboard`          | Displays a given leaderboard                  |
 
-### Setup
+### Start
 To run specific solution(year/day/part): 
 ```bash
 npm run start 2015 10 1

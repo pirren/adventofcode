@@ -35,7 +35,10 @@ export default function setup({ year = null, day = null } = {}) {
     
     // -- Create code
     console.log(`Creating code for parts 1 and 2...`)
-    let func = `import _ from 'lodash'\n\nexport default function solution (input) {\n    return input\n}`
+    // export const metadata = {
+    //     "Puzzle Name": "Trebuchet?!"
+    // }
+    let func = `import _ from 'lodash'\n\nexport const metadata = {\n    "Puzzle Name": undefined\n}\n\nexport default function solution (input) {\n    return input\n}`
     
     fs.writeFileSync(`${dir}/part1.js`, func)
     fs.writeFileSync(`${dir}/part2.js`, func)

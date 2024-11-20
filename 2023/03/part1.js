@@ -1,4 +1,4 @@
-import parseNumbers from './numbers.js'
+import { parseNumbers } from './parse.js'
 
 export const metadata = {
     "Puzzle Name": "Gear Ratios"

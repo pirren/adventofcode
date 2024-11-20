@@ -12,7 +12,7 @@ import path from 'path'
 import { fileURLToPath, pathToFileURL } from "url";
 
 export default async function runAsync({year = 2015, day = 1, part = 1, output = true } = {}) {
-    const formatLog = (label, value, width = 30) => `${year}.${day}.${part} ${label}:`.padEnd(width) + value;
+    const formatLog = (label, value) => `${year}.${day}.${part} ${label}:`.padEnd(30) + value;
 
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
@@ -35,7 +35,7 @@ export default async function runAsync({year = 2015, day = 1, part = 1, output =
 
     if (output) {
         if (module.metadata && module.metadata['Puzzle Name']) {
-            console.log(chalk.bgGreen.black('Puzzle: ', module.metadata['Puzzle Name']))
+            console.log(chalk.bgGreen.black(`Puzzle: ${module.metadata['Puzzle Name']}`))
         }
 
         if (_.isObject(answer) || _.isArray(answer)) {

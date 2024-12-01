@@ -1,5 +1,6 @@
 import transform from './transform.js'
 import _ from 'lodash'
+import { ints } from '../../lib/parsing.js'
 
 export const metadata = {
     "Puzzle Name": "If You Give A Seed A Fertilizer"
@@ -7,6 +8,6 @@ export const metadata = {
 
 export default function solution (input) {
     return transform(input, { 
-        parseSeeds: line => _.chunk(line.match(/([0-9]+)/g).map(Number), 2).map(([start, length]) => ({ sStart: start, sEnd: start + length - 1 })) 
+        parseSeeds: line => _.chunk(ints(line), 2).map(([start, length]) => ({ sStart: start, sEnd: start + length - 1 })) 
     })
 }

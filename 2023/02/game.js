@@ -4,10 +4,13 @@ export default function parseGame(line) {
         .at(-1)
         .replace(new RegExp(/\; /, 'g'), ', ')
         .split(', ')
-        .reduce((acc, round) => {
-            let [value, key] = round.split(' ');
-            acc['id'] ??= +id;
-            acc[key] = Math.max(acc[key] || 0, parseInt(value));
-            return acc;
-        }, {});
+        .reduce(
+            (acc, round) => {
+                let [value, key] = round.split(' ');
+                acc['id'] ??= +id;
+                acc[key] = Math.max(acc[key] || 0, parseInt(value));
+                return acc;
+            }, 
+            {}
+        );
 }

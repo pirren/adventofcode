@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { ints } from '../../lib/parsing.js'
 
 export const metadata = {
     "Puzzle Name": "Scratchcards"
@@ -9,7 +10,7 @@ export default function solution (input) {
         const [winningNumbers, myNumbers] = c
             .split(': ').at(-1)
             .split(' | ')
-            .map(numbers => numbers.split(' ').map(Number).filter(Boolean));
+            .map(ints);
 
         return _.intersection(winningNumbers, myNumbers);
     }).reduce((totalPoints, winners) => {

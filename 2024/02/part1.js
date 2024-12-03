@@ -11,5 +11,4 @@ export default function solution (input) {
     return input.map(ints).reduce((safe, report) => {
         return safe + 1 * (sorted(report, asc) || sorted(report, desc))
     }, 0)
-
 }

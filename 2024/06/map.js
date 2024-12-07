@@ -32,7 +32,7 @@ export function walk({ map = null, start = null, dir = null } = {}) {
             currentDir = map.get(nextPos(at, dirNext)) === '#' ? nextDir(dirNext) : dirNext;
         }
 
-        at = [at[0] + currentDir[0], at[1] + currentDir[1]];
+        at = nextPos(at, currentDir)
 
         if (map.get(at) === undefined) 
             return [false, seen];
@@ -46,21 +46,21 @@ export function walk({ map = null, start = null, dir = null } = {}) {
 };
 
 export function getMap(input) {
-    let map = mapProxy(new Map()), starting_pos = [];
+    let map = mapProxy(new Map()), start = [];
 
     for (const [y, row] of input.entries()) {
         for (const [x, token] of row.split('').entries()) {
             if (token === '^') {
-                starting_pos = [x, y];
+                start = [x, y];
             }
             map.set([x, y], token);
         }
     }
 
-    return [map, starting_pos];
+    return [map, start];
 };
 
-// Proxy to handle map.get([x, y]) and map.set([x, y], value), javascript tuples are arrays and treated as reference types
+// Proxy to handle map.get([x, y]) and map.set([x, y], value) because javascript tuples are arrays and treated as reference types
 function mapProxy (map) { 
     return new Proxy(map, {
         get: (target, prop) => {

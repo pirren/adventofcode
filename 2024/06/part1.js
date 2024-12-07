@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { walk, getMap } from './map.js'
 
 export const metadata = {

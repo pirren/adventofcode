@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { walk, getMap } from './map.js'
 import { ints } from '../../lib/parsing.js'
 
@@ -24,5 +23,4 @@ export default function solution (input) {
     }
 
     return count;
-
 };

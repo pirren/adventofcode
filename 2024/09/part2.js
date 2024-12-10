@@ -1,5 +1,4 @@
-import _ from 'lodash'
-import { getDisk, calculateChecksum } from './disk.js'
+import { getDisk, calculateChecksum } from './part1.js'
 
 export const metadata = {
     "Puzzle Name": "Disk Fragmenter"

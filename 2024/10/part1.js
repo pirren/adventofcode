@@ -6,8 +6,7 @@ export const metadata = {
 }
 
 export default function solution (input) {
-    let [map] = createMap(input, Number);
-
+    let map = createMap(input, Number);
     return startPositions(input).reduce((sum, start) => sum + traverse(map, start), 0);
 }
 
@@ -53,9 +52,10 @@ export function traverse(map, start, { revisitNodes = false } = {}) {
             if (!revisitNodes && visited.has(neighbor.toString())) 
                 continue
             
-            visited.add(neighbor.toString())
+            !revisitNodes && visited.add(neighbor.toString())
             queue.push([neighbor, currentHeight + 1])
         }
     }
+
     return ends
 }

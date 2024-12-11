@@ -7,7 +7,6 @@ export const metadata = {
 }
 
 export default function solution (input) {
-    let [map] = createMap(input, Number);
-
+    let map = createMap(input, Number);
     return startPositions(input).reduce((sum, start) => sum + traverse(map, start, { revisitNodes: true }), 0);
 }

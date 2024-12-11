@@ -1,4 +1,5 @@
-import { walk, getMap } from './map.js'
+import { walk, findStart } from './part1.js'
+import { createMap } from '../../lib/map.js'
 import { ints } from '../../lib/parsing.js'
 
 export const metadata = {
@@ -6,7 +7,8 @@ export const metadata = {
 }
 
 export default function solution (input) {
-    let [map, start] = getMap(input);
+    let map = createMap(input);
+    let start = findStart(input);
     let dir = [0, -1];
 
     let queue = Array.from(walk({ map, start, dir })[1], ints);

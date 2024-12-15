@@ -8,7 +8,7 @@ export default function solution (input) {
     let w = 101, h = 103;
     let robots = input.map(parse);
     let timeElapsed = 0;
-    const target_time = 10000
+    const target_time = Infinity
 
     const walk = (robot) => {
         // Calculate the next position

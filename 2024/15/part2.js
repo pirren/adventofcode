@@ -8,7 +8,6 @@ export const metadata = {
 export default function solution (input) {
     let [map, boxes, robot, instructions] = parseInput(input)
 
-
     for (let [dx, dy] of instructions.map(nextDir)) {
         let [x, y] = robot
         let nextPosition = [x + dx, y + dy]

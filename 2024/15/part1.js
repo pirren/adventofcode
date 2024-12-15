@@ -9,12 +9,11 @@ export default function solution (input) {
     let at = getPosition(map, '@')
 
     for (let [dx, dy] of instructions.map(nextDir)) {
-        // printMap(map)
         let [x, y] = at
         let nextToken = map[y + dy][x + dx]
-        if (nextToken == '#') { 
+        
+        if (nextToken == '#') 
             continue
-        }
         
         if (nextToken == '.') {
             map[y + dy][x + dx] = '@'
@@ -38,11 +37,8 @@ export default function solution (input) {
             }
         }
     }
-    // printMap(map)
 
-    const sumCoordinates = getSumCoordinates(map)
-
-    return sumCoordinates
+    return getSumCoordinates(map)
 }
 
 function getSumCoordinates(map) {
@@ -64,7 +60,6 @@ function moveBy(map, objects, dx, dy) {
     }
 }
 
-
 function getPosition(map, token) {
     for (let [y, row] of map.entries()) {
         for (let [x, t] of row.entries()) {
@@ -72,16 +67,6 @@ function getPosition(map, token) {
         }
     }
     return null
-}
-
-function printMap(map) {
-    for (let [y, row] of map.entries()) {
-        let line = ''
-        for (let [x, token] of row.entries()) {
-            line += token
-        }
-        console.log(line)
-    }
 }
 
 const D = new Map([

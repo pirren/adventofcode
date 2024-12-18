@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import { ints } from '../../lib/parsing.js'
 import { createMap, neighbors } from '../../lib/map.js'
 
 export const metadata = {
@@ -7,17 +6,10 @@ export const metadata = {
 }
 
 export default function solution (input) {
-    // let [width, height] = [input[0].length, input.length]
     let map = createMap(input)
     let start = getPositionOf(input, 'S')
-    // printMap(map, width, height);
-    const result = traverse(map, start)
 
-    // for (const [score, path] of result) {
-    //     printMap(map, input[0].length, input.length, path)
-    // }
-
-    return result
+    return traverse(map, start)
 }
 
 function getPositionOf(input, searchValue) {
@@ -30,21 +22,6 @@ function getPositionOf(input, searchValue) {
         }
     }
     return null
-}
-
-function printMap(map, width, height, path) {
-    let out = ''
-    for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-            if (path.some((node) => node[0] === x && node[1] === y)) {
-                out += '*'
-                continue
-            }
-            out += map.get([x, y])
-        }
-        out += '\n'
-    }
-    console.log(out)
 }
 
 export function traverse(map, start) {

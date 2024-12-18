@@ -12,24 +12,8 @@ export default function solution (input) {
     let start = getPositionOf(input, 'S')
     let end = getPositionOf(input, 'E')
     // printMap(map, width, height);
-    const [_, parents] = traverse(map, start) // dijkstra
-    let result = countNodes(end, parents)
+    const [score] = traverse(map, start) // dijkstra
     return 12345
-}
-
-function countNodes(end, parents) {
-    let node = end
-    let count = 0
-
-    let test = Object.keys(parents).sort((a, b) => a - b)
-    let test2 = Object.values(parents).sort((a, b) => a - b)
-
-
-    while (node) {
-        count++
-        node = parents[node.toString()]
-    }
-    return count
 }
 
 function getPositionOf(input, searchValue) {
@@ -44,26 +28,11 @@ function getPositionOf(input, searchValue) {
     return null
 }
 
-function printMap(map, width, height, path) {
-    let out = ''
-    for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-            if (path.some((node) => node[0] === x && node[1] === y)) {
-                out += '*'
-                continue
-            }
-            out += map.get([x, y])
-        }
-        out += '\n'
-    }
-    console.log(out)
-}
-
 export function traverse(map, start) {
     let queue = [[0, start, [1,0], [start]]]
     let visited = new Set([start.toString()])
-    let parents = {}
-    parents[start.toString()] = null
+    let seen = new Set()
+
 
     const candidates = (node) => neighbors(node)
         .filter((node) => map.get(node) !== undefined && map.get(node) !== '#');
@@ -76,7 +45,7 @@ export function traverse(map, start) {
         let [currentScore, currentPos, currentDirection, path] = queue.shift()
 
         if (map.get(currentPos) === 'E') {
-            return [currentScore, parents]
+            return [currentScore]
         }
 
         for(const node of candidates(currentPos))
@@ -89,8 +58,6 @@ export function traverse(map, start) {
                 visited.add(node.toString())
                 const newPath = path.slice()
                 newPath.push(node)
-
-                parents[node.toString()] = currentPos
 
                 queue.push([currentScore + addedScore, node, newDirection, newPath])
                 queue.sort((a, b) => a[0] - b[0])

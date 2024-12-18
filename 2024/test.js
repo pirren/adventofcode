@@ -104,4 +104,10 @@ describe('advent of code 2024', () => {
     it('day 17, part 2', async function() {
         await test({ year: 2024, day: 17, part: 2, expected: 12345 })
     })
+    it('day 18, part 1', async function() {
+        await test({ year: 2024, day: 18, part: 1, expected: 436 })
+    })
+    it('day 18, part 2', async function() {
+        await test({ year: 2024, day: 18, part: 2, expected: '61,50' })
+    })
 })

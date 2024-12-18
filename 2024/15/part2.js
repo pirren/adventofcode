@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { mapProxy } from '../../lib/map.js'
+import { ProxyMap } from '../../lib/map.js'
 
 export const metadata = {
     "Puzzle Name": "Warehouse Wandering"
@@ -126,7 +126,7 @@ function parseInput(input) {
     const [instructionLines, mapLines] = _.partition(input, isInstructionLine)
     mapLines.pop() // remove empty line
 
-    let map = mapProxy(new Map());
+    let map = new ProxyMap();
     let boxes = []
     let robotPosition = null
 

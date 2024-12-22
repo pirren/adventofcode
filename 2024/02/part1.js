@@ -14,7 +14,6 @@ export const sorted = (arr, ordered) => {
 export const parse = input => input.map(ints);
 export const asc = (arr, i) => arr.at(i) > arr.at(i + 1);
 export const desc = (arr, i) => arr.at(i) < arr.at(i + 1);
-const steep = (arr, i) => Math.abs(arr.at(i) - arr.at(i + 1)) > 3;
 
 const analyze = reports => 
     reports.reduce(

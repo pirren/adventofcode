@@ -1,29 +1,46 @@
-import _ from 'lodash'
+import { pipe } from '../../lib/utils.js'
+import { parse } from './part1.js'
 
 export const metadata = {
     "Puzzle Name": "Ceres Search"
-}
+};
 
-export default function solution (input) {
-    const t_letters = ['A', 'M', 'S'];
-    const dirs = [ [1, 1], [-1, -1], [1, -1], [-1, 1] ];
-    const isXmas = (y, x) => {
-        return dirs.filter(([dy, dx]) => {
+const search = map => {
+    const LETTERS = ['A', 'M', 'S'];
+    const dirs = [
+        [1, 1], [-1, -1], [1, -1], [-1, 1]
+    ];
+
+    const inBounds = (y, x) =>
+        y >= 0 && y < map.length && x >= 0 && x < map[0].length;
+
+    const isXmas = (y, x) =>
+        dirs.filter(([dy, dx]) => {
             const y1 = y + dy, x1 = x + dx;
             const y2 = y - dy, x2 = x - dx;
-            return input[y1][x1] === t_letters.at(1) && input[y2][x2] === t_letters.at(2)
-        }).length == 2;
-    }
+            return (
+                inBounds(y1, x1) &&
+                inBounds(y2, x2) &&
+                map[y1][x1] === LETTERS[1] &&
+                map[y2][x2] === LETTERS[2]
+            );
+        }).length === 2;
 
-    let count = 0;
+    const matches = map.flatMap((row, y) =>
+        row.flatMap((cell, x) =>
+            y > 0 && y < map.length - 1 &&
+            x > 0 && x < row.length - 1 &&
+            cell === LETTERS[0] &&
+            isXmas(y, x)
+                ? 1
+                : []
+        )
+    );
 
-    for (let y of _.range(1, input.length - 1)) {
-        for (let x of _.range(1, input[y].length - 1)) {
-            if (input[y][x] === t_letters.at(0) && isXmas(y,x)) {
-                count++;
-            }
-        }
-    }
+    return matches.length;
+};
 
-    return count;
-}
+export default pipe(
+    parse,
+    search
+);

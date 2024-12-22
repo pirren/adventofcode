@@ -1,14 +1,19 @@
-import _ from 'lodash'
-import { ints } from '../../lib/parsing.js'
+import { pipe, sum } from '../../lib/utils.js'
+import { process, sort } from './part1.js'
 
 export const metadata = {
     "Puzzle Name": "Historian Hysteria"
-}
-    
-export default function solution (input) {
-    const [left, right] = _.unzip(input.map(ints)).map(
-        list => list.sort((a, b) => a - b)
-    )
-    const frequencyMap = right.reduce((map, loc) => (map[loc] = (map[loc] || 0) + 1, map), {})
-    return _.sum(left.map(locA => locA * (frequencyMap[locA] || 0)))
-}
+};
+
+const measure = ([left, right]) => {
+    const map = right.reduce((a, x) => (a[x] = (a[x] || 0) + 1, a), {});
+
+    return left.map(locA => locA * (map[locA] || 0));
+};
+
+export default pipe(
+    process,
+    sort,
+    measure,
+    sum
+);

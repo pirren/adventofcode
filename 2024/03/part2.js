@@ -4,6 +4,7 @@ import { pipe } from '../../lib/utils.js'
 export const metadata = {
     "Puzzle Name": "Mull It Over"
 }
+
 const parse = input => 
     input.join().match(/(don't|do)(?=\(\))|mul\(\d+,\d+\)/g);
 

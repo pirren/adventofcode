@@ -26,34 +26,30 @@ function getPositionOf(input, searchValue) {
 
 export function traverse(map, start) {
     let queue = [[0, start, [1,0], [start]]]
-    let visited = new Set([start.toString()])
+    let visited = new Set()
 
     const candidates = (node) => neighbors(node)
         .filter((node) => map.get(node) !== undefined && map.get(node) !== '#');
         
-    const calculateCost = (currentDirection, newDirection) => {
-        return currentDirection.toString() == newDirection ? 1 : 1001
-    }
+    const calculateCost = (currentDirection, newDirection) => currentDirection.toString() == newDirection ? 1 : 1001
 
     while (queue.length) {
-        let [currentScore, currentPos, currentDirection, path] = queue.shift()
+        let [score, currentPos, direction, path] = queue.shift()
 
         if (map.get(currentPos) === 'E') {
-            return currentScore
+            return score
         }
+
+        visited.add(currentPos.toString())
 
         for(const node of candidates(currentPos))
         {
             if(!visited.has(node.toString()))
             {
                 const newDirection = [node[0] - currentPos[0], node[1] - currentPos[1]]
-                const addedScore = calculateCost(currentDirection, newDirection)
+                const cost = calculateCost(direction, newDirection)
 
-                visited.add(node.toString())
-                const newPath = path.slice()
-                newPath.push(node)
-
-                queue.push([currentScore + addedScore, node, newDirection, newPath])
+                queue.push([score + cost, node, newDirection, [node, ...path]])
                 queue.sort((a, b) => a[0] - b[0])
             }
         }

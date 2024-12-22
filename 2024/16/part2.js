@@ -1,19 +1,15 @@
 import _ from 'lodash'
-import { ints } from '../../lib/parsing.js'
 import { createMap, neighbors } from '../../lib/map.js'
+import { Heap } from 'heap-js'
 
 export const metadata = {
     "Puzzle Name": "Reindeer Maze"
 }
 
 export default function solution (input) {
-    // let [width, height] = [input[0].length, input.length]
     let map = createMap(input)
     let start = getPositionOf(input, 'S')
-    let end = getPositionOf(input, 'E')
-    // printMap(map, width, height);
-    const [score] = traverse(map, start) // dijkstra
-    return 12345
+    return traverse(map, start)
 }
 
 function getPositionOf(input, searchValue) {
@@ -29,39 +25,51 @@ function getPositionOf(input, searchValue) {
 }
 
 export function traverse(map, start) {
-    let queue = [[0, start, [1,0], [start]]]
-    let visited = new Set([start.toString()])
-    let seen = new Set()
+    const queue = new Heap((a, b) => a[0] - b[0]) // Using heap-js changed runtime from 40s to 8s
+    queue.push([0, start, [1,0], [start]])
+    
+    let visited = {}
+    let minScore = Infinity
+    let paths = []
 
+    const notReverse = (a, b) => a[0] !== -b[0] || a[1] !== -b[1]
 
     const candidates = (node) => neighbors(node)
-        .filter((node) => map.get(node) !== undefined && map.get(node) !== '#');
+        .filter((node) => map.get(node) !== undefined && map.get(node) !== '#')
+        .filter(notReverse);
         
-    const calculateCost = (currentDirection, newDirection) => {
-        return currentDirection.toString() == newDirection ? 1 : 1001
-    }
+    const calculateCost = (currentDirection, newDirection) => currentDirection.toString() == newDirection ? 1 : 1001
 
     while (queue.length) {
-        let [currentScore, currentPos, currentDirection, path] = queue.shift()
+        let [score, currentPos, currentDirection, path] = queue.pop()
+        let [x, y] = currentPos
+        const key = [x, y, currentDirection].toString()
 
         if (map.get(currentPos) === 'E') {
-            return [currentScore]
+            if (score < minScore) {
+                paths = [path]
+                minScore = score
+            }
+            if (score === minScore) paths.push(path)
+            continue
         }
+
+        if (!(key in visited)) visited[key] = Infinity
+        if (visited[key] < score) continue
+        visited[key] = score
+        if (score > minScore) continue
 
         for(const node of candidates(currentPos))
         {
-            if(!visited.has(node.toString()))
-            {
-                const newDirection = [node[0] - currentPos[0], node[1] - currentPos[1]]
-                const addedScore = calculateCost(currentDirection, newDirection)
+            const newDirection = [node[0] - currentPos[0], node[1] - currentPos[1]]
+            const cost = calculateCost(currentDirection, newDirection)
 
-                visited.add(node.toString())
-                const newPath = path.slice()
-                newPath.push(node)
-
-                queue.push([currentScore + addedScore, node, newDirection, newPath])
-                queue.sort((a, b) => a[0] - b[0])
-            }
+            queue.push([score + cost, node, newDirection, [node, ...path]])
         }
     }
+
+    const pathTiles = new Set();
+    paths.forEach(path => path.forEach(tile => pathTiles.add(tile.toString())))
+
+    return pathTiles.size
 }

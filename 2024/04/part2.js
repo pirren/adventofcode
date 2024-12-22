@@ -14,7 +14,7 @@ const search = map => {
     const inBounds = (y, x) =>
         y >= 0 && y < map.length && x >= 0 && x < map[0].length;
 
-    const isXmas = (y, x) =>
+    const matchesPattern = (y, x) =>
         dirs.filter(([dy, dx]) => {
             const y1 = y + dy, x1 = x + dx;
             const y2 = y - dy, x2 = x - dx;
@@ -31,7 +31,7 @@ const search = map => {
             y > 0 && y < map.length - 1 &&
             x > 0 && x < row.length - 1 &&
             cell === LETTERS[0] &&
-            isXmas(y, x)
+            matchesPattern(y, x)
                 ? 1
                 : []
         )

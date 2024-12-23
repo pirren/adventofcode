@@ -1,46 +1,49 @@
-import _ from 'lodash'
-import { ints } from '../../lib/parsing.js'
+import { pipe, sum } from '../../lib/utils.js'
+import { parse, sorted } from './part1.js'
 
 export const metadata = {
     "Puzzle Name": "Print Queue"
 }
 
-export default function solution (input) {
-    let [rules, updates] = _.partition(
-        input.filter(Boolean), 
-        line => line.includes('|')
-    ).map(x => x.map(ints));
-
-    let rulesMap = rules.reduce(
+const getCorrected = ({ rules, updates }) => {
+    const precedenceMap = rules.reduce(
         (map, [first, second]) => ((map[first] = map[first] || []).push(second), map), 
         {}
     );
 
-    const isSorted = update => 
-        update.every((page, i) => update.slice(0, i).every(p => !rulesMap[page]?.includes(p)));
-
-    let queue = updates.filter(update => !isSorted(update))
-    let output = []
+    let queue = updates.filter(update => !sorted(update, precedenceMap))
+    let correctedUpdates = []
 
     while(queue.length) {
-        let next = queue.shift();
+        let currentUpdate = queue.shift();
 
-        if (isSorted(next)) {
-            output.push(next)
+        if (sorted(currentUpdate, precedenceMap)) {
+            correctedUpdates.push(currentUpdate)
             continue;
         }
 
-        for (let i = 0; i < next.length; i++) {
-            const page = next[i]
-            if (!next.slice(0,i).some(p => rulesMap[page]?.includes(p))) continue;
+        for (let i = 0; i < currentUpdate.length; i++) {
+            const currentPage = currentUpdate[i];
 
-            let swapIndex = next.findIndex((p, j) => j < i && rulesMap[page]?.includes(p));
-            [next[swapIndex], next[i]] = [next[i], next[swapIndex]];
-            
-            queue.push(next)
-            break;
+            // Find a page before i that violates the precedence rule with currentPage
+            const swapIndex = currentUpdate.findIndex(
+                (page, j) => j < i && precedenceMap[currentPage]?.includes(page)
+            );
+
+            if (swapIndex !== -1) {
+                // Swap the pages to fix the order
+                [currentUpdate[swapIndex], currentUpdate[i]] = [currentUpdate[i], currentUpdate[swapIndex]];
+                queue.push(currentUpdate);
+                break;
+            }
         }
     }
-    
-    return _.sum(output.map(update => update.at((update.length - 1) / 2)))
-}
+
+    return correctedUpdates.map(update => update.at((update.length - 1) / 2));
+};
+
+export default pipe (
+    parse,
+    getCorrected,
+    sum
+)

@@ -1,69 +1,64 @@
-import { createMap } from '../../lib/map.js'
+import { pipe } from '../../lib/utils.js'
 
 export const metadata = {
     "Puzzle Name": "Guard Gallivant"
-}
-
-export default function solution (input) {
-    let map = createMap(input)
-    let start = findStart(input)
-    let dir = [0, -1]
-    return walk({map, start, dir}).at(1).size
-}
-
-const nextDirections = new Map([
-    [[0, -1].toString(), [1, 0]],
-    [[1, 0].toString(), [0, 1]],
-    [[0, 1].toString(), [-1, 0]],
-    [[-1, 0].toString(), [0, -1]]
-]);
-
-const nextDir = (dir) => nextDirections.get(dir.toString());
-
-export function walk({ map = null, start = null, dir = null } = {}) {
-    let stack = [[start, dir]];
-    let seen = new Set([start.toString()]);
-    let seenBlocks = new Set();
-
-    const nextPos = ([x, y], [dx, dy]) => [x + dx, y + dy];
-
-    while (stack.length) {
-        let [at, currentDir] = stack.pop();
-
-        let next = nextPos(at, currentDir)
-        let next_token = map.get(next);
-
-        if (next_token === '#') {
-            let block = [at, currentDir].toString();
-
-            if (seenBlocks.has(block)) 
-                return [true, seen];
-
-            seenBlocks.add(block);
-
-            let dirNext = nextDir(currentDir);
-            currentDir = map.get(nextPos(at, dirNext)) === '#' ? nextDir(dirNext) : dirNext;
-        }
-
-        at = nextPos(at, currentDir)
-
-        if (map.get(at) === undefined) 
-            return [false, seen];
-
-        seen.add(at.toString());
-
-        stack.push([at, currentDir]);
-    }
-
-    return [false, seen];
 };
 
-export function findStart(input) {
-    for (const [y, row] of input.entries()) {
-        for (const [x, token] of row.split('').entries()) {
-            if (token === '^') {
-                return [x, y];
-            }
+export const start = map => {
+    const sy = map.findIndex(row => row.includes('^'));
+    const sx = map[sy].indexOf('^');
+    return [sx, sy];
+};
+
+export const parseLayout = input => input.map(row => ([...row]));
+
+const nextDirection = (dir) => {
+    const directions = [
+        [0, -1],
+        [1, 0],
+        [0, 1],
+        [-1, 0]
+    ];
+
+    const index = directions.findIndex(([dx, dy]) => dx === dir[0] && dy === dir[1]);
+    return directions[(index + 1) % directions.length];
+};
+
+export const walk = (map, startAt = null) => {
+    const stack = [[startAt || start(map), [0, -1]]];
+    const tiles = new Set();
+    const blocks = new Set();
+    
+    while (stack.length) {
+        let [position, dir] = stack.pop();
+        tiles.add(position.toString());
+
+        let NEXT = [position[0] + dir[0], position[1] + dir[1]];
+
+        if (NEXT[0] < 0 || NEXT[0] >= map[0].length || NEXT[1] < 0 || NEXT[1] >= map.length) {
+            return [tiles, false];
         }
+
+        let token = map[NEXT[1]][NEXT[0]];
+
+        if (token === '#') {
+            let block = [position, dir].toString();
+            if (blocks.has(block)) 
+                return [null, true];
+            blocks.add(block);
+
+            // Update NEXT after turning
+            let nd = nextDirection(dir);
+            dir = map[position[1] + nd[1]][position[0] + nd[0]] === '#' ? nextDirection(nd) : nd;
+            NEXT = [position[0] + dir[0], position[1] + dir[1]];
+        }
+
+        stack.push([NEXT, dir]);
     }
-}
+};
+
+export default pipe(
+    parseLayout,
+    walk,
+    ([seen]) => seen.size
+);

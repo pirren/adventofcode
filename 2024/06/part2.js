@@ -1,28 +1,28 @@
-import { walk, findStart } from './part1.js'
-import { createMap } from '../../lib/map.js'
+import { pipe } from '../../lib/utils.js'
 import { ints } from '../../lib/parsing.js'
+import { walk, parseLayout, start } from './part1.js'
 
 export const metadata = {
     "Puzzle Name": "Guard Gallivant"
-}
-
-export default function solution (input) {
-    let map = createMap(input);
-    let start = findStart(input);
-    let dir = [0, -1];
-
-    let queue = Array.from(walk({ map, start, dir })[1], ints);
-
-    let count = 0;
-    let lastPos = null;
-
-    for (const position of queue) {
-        if (lastPos) map.set(lastPos, '.'); 
-        map.set(position, '#');
-
-        count += walk({ map, start, dir }).at(0);
-        lastPos = position;
-    }
-
-    return count;
 };
+
+const validObstructions = map => {
+    const startPosition = start(map);
+    const seen = Array.from(walk(map, startPosition)[0], ints);
+
+    return seen.slice(1).reduce(
+        (valid, position) => {
+            map[position[1]][position[0]] = '#';
+            const result = walk(map, startPosition).at(1);
+            map[position[1]][position[0]] = '.';
+
+            return valid + result;
+        }, 
+        0
+    );
+};
+
+export default pipe(
+    parseLayout,
+    validObstructions,
+);

@@ -3,47 +3,57 @@ import { parse, sorted } from './part1.js'
 
 export const metadata = {
     "Puzzle Name": "Print Queue"
-}
+};
 
 const getCorrected = ({ rules, updates }) => {
-    const precedenceMap = rules.reduce(
-        (map, [first, second]) => ((map[first] = map[first] || []).push(second), map), 
-        {}
-    );
+    const precedenceMap = rules.reduce((map, [first, second]) => {
+        return { ...map, [first]: [...(map[first] || []), second] };
+    }, {});
 
-    let queue = updates.filter(update => !sorted(update, precedenceMap))
-    let correctedUpdates = []
+    const correctOrder = (initialQueue) => {
+        const correctedUpdates = [];
+        let queue = [...initialQueue];
 
-    while(queue.length) {
-        let currentUpdate = queue.shift();
+        while (queue.length) {
+            const currentUpdate = queue.shift();
 
-        if (sorted(currentUpdate, precedenceMap)) {
-            correctedUpdates.push(currentUpdate)
-            continue;
-        }
+            if (sorted(currentUpdate, precedenceMap)) {
+                correctedUpdates.push(currentUpdate);
+                continue;
+            }
 
-        for (let i = 0; i < currentUpdate.length; i++) {
-            const currentPage = currentUpdate[i];
+            const swappedUpdate = currentUpdate.reduce((result, currentPage, i) => {
+                if (result) return result;
 
-            // Find a page before i that violates the precedence rule with currentPage
-            const swapIndex = currentUpdate.findIndex(
-                (page, j) => j < i && precedenceMap[currentPage]?.includes(page)
-            );
+                const index = currentUpdate.findIndex(
+                    (page, j) => j < i && precedenceMap[currentPage]?.includes(page)
+                );
 
-            if (swapIndex !== -1) {
-                // Swap the pages to fix the order
-                [currentUpdate[swapIndex], currentUpdate[i]] = [currentUpdate[i], currentUpdate[swapIndex]];
-                queue.push(currentUpdate);
-                break;
+                if (index !== -1) {
+                    const newUpdate = [...currentUpdate];
+                    [newUpdate[index], newUpdate[i]] = [newUpdate[i], newUpdate[index]];
+                    return newUpdate;
+                }
+
+                return null;
+            }, null);
+
+            if (swappedUpdate) {
+                queue.push(swappedUpdate);
             }
         }
-    }
 
-    return correctedUpdates.map(update => update.at((update.length - 1) / 2));
+        return correctedUpdates;
+    };
+
+    const initialQueue = updates.filter((update) => !sorted(update, precedenceMap));
+    return correctOrder(initialQueue);
 };
+
+const middleValue = update => update.at((update.length - 1) / 2);
 
 export default pipe (
     parse,
     getCorrected,
-    sum
-)
+    c => sum(c.map(middleValue))
+);

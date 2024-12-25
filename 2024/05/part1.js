@@ -16,22 +16,26 @@ export const parse = input => {
     return { rules, updates };
 };
 
-export const sorted = (update, map) =>
-    update.every((page, i) => update.slice(0, i).every(p => !map[page]?.includes(p)));
-
-const getOrdered = ({ rules, updates }) => {
-    const precedenceMap = rules.reduce(
-        (map, [first, second]) => ((map[first] = map[first] || []).push(second), map), 
-        {}
+export const sorted = (update, precedenceMap) => {
+    return update.every((page, i) =>
+        update.slice(0, i).every((prevPage) => 
+            !precedenceMap[page]?.includes(prevPage)
+        )
     );
-
-    const orderedUpdates = updates.filter(update => sorted(update, precedenceMap));
-
-    return orderedUpdates.map(update => update.at((update.length - 1) / 2));
 };
+
+const getOrdered = ({ rules, updates }) => 
+     updates.filter(update => 
+        sorted(update, rules.reduce(
+            (map, [first, second]) => ((map[first] = map[first] || []).push(second), map), 
+            {}
+        )
+    ));
+
+const middleValue = update => update.at((update.length - 1) / 2);
 
 export default pipe(
     parse,
     getOrdered,
-    sum
+    c => sum(c.map(middleValue))
 );

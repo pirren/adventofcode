@@ -23,25 +23,19 @@ const operations = {
 const filter = (fn) => (input) => input.map(v => fn(v)).filter(Boolean);
 
 const calibrate = ({ target, numbers }) => {
-    let stack = [{ subtotal: numbers.at(0), index: 1 }]
+    const exec = ({ subtotal, index }) => {
+        if (subtotal > target) return false; // Overshoot
+        if (index === numbers.length) return subtotal === target ? target : false; 
 
-    while(stack.length) {
-        let { subtotal, index } = stack.pop()
-        if (subtotal > target) continue
-        
-        if (index == numbers.length) {
-            if (subtotal == target) return target
-            continue
-        }
+        const next = numbers[index];
 
-        let next = numbers[index]
-        for (const op of Object.keys(operations)) {
-            let newSubTotal = operations[op](subtotal, next) 
-            stack.push({ subtotal: newSubTotal, index: index + 1 })
-        }
-    }
+        return Object.keys(operations)
+            .map(op => operations[op](subtotal, next))
+            .map(newSubtotal => exec({ subtotal: newSubtotal, index: index + 1 }))
+            .find(result => result !== false) || false; // Return the first valid result or false
+    };
 
-    return false;
+    return exec({ subtotal: numbers.at(0), index: 1 });
 };
 
 export default pipe( 

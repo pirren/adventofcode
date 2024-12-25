@@ -39,16 +39,20 @@ function addTestsFromTemplate(tests, { year = null, day = null } = {}) {
 
 function getSolutionTemplate() {
     return [
-        `import _ from 'lodash'`,
         `import { ints } from '../../lib/parsing.js'`,
+        `import { pipe } from '../../lib/utils.js'`,
         ``,
         `export const metadata = {`,
         `    "Puzzle Name": undefined`,
-        `}`,
+        `};`,
         ``,
-        `export default function solution (input) {`,
-        `    return input`,
-        `}`
+        `const parse = input => {`,
+        ``,
+        `};`,
+        ``,
+        `export default pipe(`,
+        `    parse`,
+        `);`
     ].join('\n')
 }
 

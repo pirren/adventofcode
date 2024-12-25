@@ -1,5 +1,4 @@
 // Description: This file is the entry point for the CLI. It reads the arguments and runs a single solution.
-import _ from 'lodash'
 import runAsync from './core/run.js'
 
 const [ year = 2015, day = 15, part = 1 ] = process.argv.slice(2)

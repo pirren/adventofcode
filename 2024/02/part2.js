@@ -15,7 +15,7 @@ const analyze = reports =>
                     return safe + 1;
                 }
             }
-            return safe + (sorted(report, asc) || sorted(report, desc));
+            return safe + (asc(report) || desc(report));
         }, 
         0
     );

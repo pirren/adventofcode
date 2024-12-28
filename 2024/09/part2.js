@@ -1,28 +1,18 @@
-import { getDisk, calculateChecksum } from './part1.js'
+import { parseDisk, checksum } from './part1.js'
+import { pipe } from "../../lib/utils.js";
 
 export const metadata = {
     "Puzzle Name": "Disk Fragmenter"
-}
+};
 
-export default function solution (input) {
-    let [files, freeSpace] = getDisk(input);
-
-    fragment(files, freeSpace);
-
-    return calculateChecksum(files);
-}
-
-function fragment(files, freeSpace) {
-    files = files.sort((a, b) => b.id - a.id)
-
+function defragment([files, freeSpace]) {
     while(freeSpace.length) {
-        let { spacePos, space } = freeSpace.shift()
+        let { spacePos, space } = freeSpace.shift();
         
         for (let i = 0; i < files.length; i++) {
-            let file = files[i]
+            let file = files[i];
 
-            if (file.filePos < spacePos || file.size > space) 
-                continue;
+            if (file.filePos < spacePos || file.size > space) continue;
 
             file.filePos = spacePos;
             if (space > file.size) 
@@ -31,4 +21,14 @@ function fragment(files, freeSpace) {
             break;
         }
     }
-}
+
+    return files;
+};
+
+export default pipe(
+    parseDisk,
+    ([files, freeSpace]) => 
+        [files.sort((a, b) => b.id - a.id), freeSpace],
+    defragment,
+    checksum
+);

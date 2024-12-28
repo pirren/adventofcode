@@ -1,20 +1,13 @@
+import { pipe, range, sum } from "../../lib/utils.js";
+
 export const metadata = {
     "Puzzle Name": "Disk Fragmenter"
-}
+};
 
-export default function solution (input) {
-    let [files, freeSpace] = getDisk(input);
-
-    fragment(files, freeSpace);
-
-    return calculateChecksum(files);
-}
-
-function fragment(files, freeSpace) {
-    while (freeSpace.length) {
-        let {spacePos: currentPos, space: remainingSpace} = freeSpace.shift()
+const fragment = ([files, freeSpace]) => 
+    freeSpace.reduce((updatedFiles, {spacePos: currentPos, space: remainingSpace}) => {
         while (remainingSpace > 0) {
-            if (currentPos > files.at(-1).filePos) 
+            if (currentPos > updatedFiles.at(-1).filePos) 
                 break;
 
             const lastFile = files.at(-1);
@@ -22,44 +15,50 @@ function fragment(files, freeSpace) {
 
             lastFile.size -= chunkToMove;
             if (lastFile.size === 0) 
-                files.pop()
+                files.pop();
 
-            const newFile = {id: lastFile.id, size: chunkToMove, filePos: currentPos}
-            const nextFile = files.find(f => f.filePos > currentPos)
-            files.splice(files.indexOf(nextFile), 0, newFile) // Insert new file in the right position
+            const newFile = {id: lastFile.id, size: chunkToMove, filePos: currentPos};
+            const nextFile = files.find(f => f.filePos > currentPos);
+            files.splice(files.indexOf(nextFile), 0, newFile);
 
             remainingSpace -= chunkToMove;
             currentPos += chunkToMove;
         }
-    }
-}
 
-export function getDisk(input) {
-    let queue = [...input].map(Number)
-    let files = []
-    let freeSpace = []
-    
-    let pos = 0, id = 0
-    while (queue.length) {
-        const size = queue.shift() || 0, space = queue.shift() || 0
-        
-        files.push({id, size, filePos: pos})
-        pos += size;
+        return updatedFiles;
+    }, files);
 
-        if (space > 0) 
-            freeSpace.push({spacePos: pos, space})
-        
-        pos += space;
-        id++;
-    }
-    return [files, freeSpace];
-}
+export const parseDisk = input =>  
+    [...input]
+        .map(Number)
+        .reduce(
+            ([files, freeSpace, pos, id], sizeOrSpace, index, arr) => {
+                if (index % 2 === 0) {
+                    // Handle file
+                    files.push({ id, size: sizeOrSpace, filePos: pos });
+                    pos += sizeOrSpace;
+                } else {
+                    // Handle free space
+                    if (sizeOrSpace > 0) freeSpace.push({ spacePos: pos, space: sizeOrSpace });
+                    pos += sizeOrSpace;
+                    id++;
+                }
+                return [files, freeSpace, pos, id];
+            },
+            [[], [], 0, 0] // accumulator: files, freeSpace, position and id
+        )
+        .slice(0, 2); // Return only files and freeSpace
 
-export function calculateChecksum(files) {
-    return files.reduce((acc, {id, size, filePos}) => {
-        for (let i = filePos; i < filePos + size; i++) {
-            acc += i * id;
-        }
-        return acc;
-    }, 0);
-}
+export const checksum = (files) => 
+    sum(
+        files
+            .flatMap(({id, size, filePos}) => 
+                range(filePos, filePos + size).map(i => i * id)
+        )
+    );
+
+export default pipe(
+    parseDisk,
+    fragment,
+    checksum
+);

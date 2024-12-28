@@ -1,11 +1,12 @@
-import { getInitialLine, blink } from './part1.js';
+import { parseStones, change } from './part1.js';
+import { pipe, sum } from '../../lib/utils.js';
 
 export const metadata = {
     "Puzzle Name": "Plutonian Pebbles"
-}
+};
 
-export default function solution (input) {
-    let stones = getInitialLine(input); 
-    blink(stones, 75);
-    return Object.values(stones).reduce((acc, val) => acc + val, 0);
-}
+export default pipe(    
+    parseStones,
+    change(75),
+    m => sum(Object.values(m))
+);

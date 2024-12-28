@@ -1,61 +1,62 @@
-import _ from 'lodash'
-import { createMap } from '../../lib/map.js'
+import { pipe, sum } from '../../lib/utils.js';
+import { neighbors } from '../../lib/map.js';
 
 export const metadata = {
     "Puzzle Name": "Hoof It"
-}
+};
 
-export default function solution (input) {
-    let map = createMap(input, Number);
-    return startPositions(input).reduce((sum, start) => sum + traverse(map, start), 0);
-}
+export const parseMap = input => 
+    input.map(row => row.split('').map(Number));
 
-export function startPositions(input) {
-    let starts = [];
-    for (const [y, row] of input.entries()) {
-        for (const [x, token] of row.split('').entries()) {
-            if (token === '0') {
-                starts.push([x, y]);
+const startPositions = map =>
+    map.reduce((acc, row, y) => {
+        row.forEach((cell, x) => {
+            if (cell === 0) {
+                acc.push([x, y]);
             }
-        }
-    }
-    return starts;
-}
-
-export function traverse(map, start, { revisitNodes = false } = {}) {
-    let queue = [[start, 0, 0]]
-    let visited = new Set([start.toString()])
-    let ends = 0
-
-    const neighbors = ([x, y], cheight) => {
-        return [
-            [x + 1, y],
-            [x - 1, y],
-            [x, y + 1],
-            [x, y - 1]
-        ]
-        .filter((node) => {
-            let height = map.get(node)
-            return height !== undefined && map.get(node) - cheight == 1
         });
-    }
-    
-    while (queue.length) {
-        let [current, currentHeight] = queue.shift()
+        return acc;
+    }, []); 
 
-        if (map.get(current) === 9) {
-            ends++
+export function traverse(map, { revisit = false } = {}) {
+    const candidates = (node, currentHeight) => 
+        neighbors(node)
+            .filter(([x, y]) => 
+                map[y]?.[x] !== undefined && currentHeight + 1 ==  map[y]?.[x]
+            );
+
+    const walk = start => {
+        let queue = [[start, 0, 0]]
+        let visited = new Set([start.toString()])
+        let ends = 0
+        
+        while (queue.length) {
+            let [current, currentHeight] = queue.shift();
+            const [x, y] = current;
+
+            if (map[y]?.[x] === 9) ends++
+
+            queue.push(
+                ...candidates(current, currentHeight)
+                .map(neighbor => [neighbor, currentHeight + 1])
+                .filter(([neighbor]) => {
+                    if (!revisit && visited.has(neighbor.toString())) 
+                        return false
+                    !revisit && visited.add(neighbor.toString())
+                    return true
+                })
+            );
         }
 
-        for(const neighbor of neighbors(current, currentHeight))
-        {
-            if (!revisitNodes && visited.has(neighbor.toString())) 
-                continue
-            
-            !revisitNodes && visited.add(neighbor.toString())
-            queue.push([neighbor, currentHeight + 1])
-        }
-    }
+        return ends;
+    };
 
-    return ends
-}
+    return startPositions(map)
+        .map(walk);
+};
+
+export default pipe(
+    parseMap,
+    traverse,
+    sum
+);

@@ -4,7 +4,6 @@
  * Description: Fetch and display the leaderboard for a given year
  */
 
-import _ from 'lodash'
 import axios from 'axios'
 import dotenv from 'dotenv'
 import fs from 'fs'

@@ -98,7 +98,7 @@ const notEncryptedFileTypes = filePath => /\.(txt|json)$/i.test(filePath);
 // -- Decrypts all files with the .enc extension
 export function decryptFiles() {
     console.log(chalk.bgCyan('Decrypting files...'));
-    const files = _.flattenDeep(getAllFiles()).filter(encryptedFileTypes);
+    const files = getAllFiles().flat(Infinity).filter(encryptedFileTypes);
     files.forEach(decryptFile);
     console.log(chalk.bgCyan('Decryption complete.'));
 }
@@ -106,7 +106,7 @@ export function decryptFiles() {
 // -- Encrypts all files with the .txt or .json extension (except those that are already encrypted)
 export function encryptFiles() {
     console.log(chalk.bgCyan('Encrypting files...'));
-    const allFiles = _.flattenDeep(getAllFiles());
+    const allFiles = getAllFiles().flat(Infinity);
 
     // -- Get all encrypted files. No need to encrypt them again
     const encryptedFiles = new Set(

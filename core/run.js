@@ -4,7 +4,6 @@
  * Description: Run the solution for a given year, day, and part.
  */
 
-import _ from 'lodash'
 import moment from 'moment'
 import chalk from 'chalk'
 import fs from 'fs'
@@ -38,17 +37,12 @@ export default async function runAsync({year = 2015, day = 1, part = 1, output =
             console.log(chalk.bgGreen.black(`Puzzle: ${module.metadata['Puzzle Name']}`))
         }
 
-        if (_.isObject(answer) || _.isArray(answer)) {
-            console.log(`${year}.${day}.${part} answer:`)
-            console.log(JSON.stringify(answer))
-        } else {
-            console.log(formatLog('answer', answer))
-        }
+        console.log(formatLog('answer', answer))
     }
     let endTime = moment()
 
     if (output) {
-        console.log(formatLog('time', moment(endTime.diff(startTime)).format('mm:ss:SSSSS')))
+        console.log(formatLog('time', moment(endTime.diff(startTime)).milliseconds() + ' ms'))
     }
     return answer
 }

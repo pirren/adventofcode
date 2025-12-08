@@ -1,5 +1,5 @@
 /**
- * fileCrypto.js
+ * file-crypto.js
  *
  * Description: Encrypts and decrypts files using the aes-256-cbc algorithm.
  */

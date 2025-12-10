@@ -7,7 +7,7 @@
 import { assert } from 'chai'
 import runAsync from './run.js'
 
-export default async function test({
+export default async function aocTest({
   context = null,
   year = null,
   day = null,

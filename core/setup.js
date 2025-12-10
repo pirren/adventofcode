@@ -12,7 +12,7 @@ const formatDay = day => day.toString().padStart(2, '0')
 function testTemplate(year) {
     const template = `
     // Description: Tests for Advent of Code ${year} solutions.
-    import test from '../core/test.js'
+    import aocTest from '../core/test.js'
 
     describe('advent of code ${year}', () => {
     })`
@@ -26,10 +26,10 @@ function testTemplate(year) {
 function addTestsFromTemplate(tests, { year = null, day = null } = {}) {
     const template = `
     it('day ${formatDay(day)}, part 1', async function() {
-        await test({ year: ${year}, day: ${day}, part: 1, expected: undefined })
+        await aocTest({ context: this, year: ${year}, day: ${day}, part: 1, expected: undefined })
     })
     it('day ${formatDay(day)}, part 2', async function() {
-        await test({ year: ${year}, day: ${day}, part: 2, expected: undefined })
+        await aocTest({ context: this, year: ${year}, day: ${day}, part: 2, expected: undefined })
     })`
     .replace(/^\n|\n$/g, '').trimEnd();
 

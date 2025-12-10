@@ -20,4 +20,10 @@ describe('advent of code 2025', () => {
     it('day 03, part 2', async function() {
         await aocTest({ context: this, year: 2025, day: 3, part: 2, expected: 167384358365132 })
     })
+    it('day 04, part 1', async function() {
+        await aocTest({ context: this, year: 2025, day: 4, part: 1, expected: 1626 })
+    })
+    it('day 04, part 2', async function() {
+        await aocTest({ context: this, year: 2025, day: 4, part: 2, expected: 9173 })
+    })
 })

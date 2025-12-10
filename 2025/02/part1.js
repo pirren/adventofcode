@@ -5,7 +5,7 @@ export const metadata = {
   "Puzzle Name": "Gift Shop"
 };
 
-const parseRanges = input => 
+export const parseRanges = input => 
   input
     .split(',')
     .map(rangeStr => 
@@ -23,13 +23,13 @@ const isMirroredId = id => {
 const expandRange = ([start, end]) => 
   Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
-const sumInvalidIds = ranges =>
+export const sumInvalidIds = filter => ranges =>
   ranges
     .flatMap(expandRange)
-    .filter(isMirroredId)
+    .filter(filter)
     .reduce((acc, id) => acc + id, 0);
 
 export default pipe(
   parseRanges,
-  sumInvalidIds
+  sumInvalidIds(isMirroredId)
 );

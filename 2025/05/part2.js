@@ -40,9 +40,9 @@ const mergeRanges = ranges =>
 
 const steps = mergedRanges => 
   mergedRanges
-  .reduce((total, [start, end]) =>
-    total += end - start + 1
-  , 0);
+    .reduce((total, [start, end]) =>
+      total += end - start + 1
+    , 0);
 
 export default pipe(
   parse,

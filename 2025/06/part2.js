@@ -4,13 +4,13 @@ export const metadata = {
   "Puzzle Name": "Trash Compactor"
 };
 
+const parseGrid = input =>
+  input.map(x => [...x]);
+
 const rotateCounterClockwise = matrix =>
   matrix[0].map((_, colIndex) =>
     matrix.map(row => row[row.length - 1 - colIndex])
   );
-
-const parseGrid = input =>
-  input.map(x => [...x]);
 
 const groupByEmpty = arr => {
   const groups = [];
@@ -27,7 +27,7 @@ const groupByEmpty = arr => {
 
   if (next.length) groups.push(next);
   return groups;
-}
+};
 
 const parseProblems = matrix => {
   const operations = matrix

@@ -11,38 +11,38 @@ import path from 'path'
 import { fileURLToPath, pathToFileURL } from "url";
 
 export default async function runAsync({year = 2015, day = 1, part = 1, output = true } = {}) {
-    const formatLog = (label, value) => `${year}.${day}.${part} ${label}:`.padEnd(30) + value;
+  const formatLog = (label, value) => `${year}.${day}.${part} ${label}:`.padEnd(30) + value;
 
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
 
-    const solutionFile = `part${part}.js`
-    const inputFile = 'input.txt'
+  const solutionFile = `part${part}.js`
+  const inputFile = 'input.txt'
 
-    const startTime = moment();
+  const startTime = moment();
 
-    const filePath = path.resolve(__dirname, `../${year}/`, `${String(day).padStart(2, '0')}`);
+  const filePath = path.resolve(__dirname, `../${year}/`, `${String(day).padStart(2, '0')}`);
 
-    let input = fs.readFileSync(path.resolve(filePath, inputFile), 'utf-8').trimEnd().split('\r\n')
+  let input = fs.readFileSync(path.resolve(filePath, inputFile), 'utf-8').trimEnd().split('\r\n')
 
-    if (output) {
-        console.log(`Running ${year}.${day}.${part}`)
-    } 
-    
-    let module = await import(pathToFileURL(path.resolve(filePath, solutionFile)))
-    let answer = await module.default(input.length === 1 ? input[0] : input)
+  if (output) {
+    console.log(`Running ${year}.${day}.${part}`)
+  } 
+  
+  let module = await import(pathToFileURL(path.resolve(filePath, solutionFile)))
+  let answer = await module.default(input.length === 1 ? input[0] : input)
 
-    if (output) {
-        if (module.metadata && module.metadata['Puzzle Name']) {
-            console.log(chalk.bgGreen.black(`Puzzle: ${module.metadata['Puzzle Name']}`))
-        }
-
-        console.log(formatLog('answer', answer))
+  if (output) {
+    if (module.metadata && module.metadata['Puzzle Name']) {
+      console.log(chalk.bgGreen.black(`Puzzle: ${module.metadata['Puzzle Name']}`))
     }
-    let endTime = moment()
 
-    if (output) {
-        console.log(formatLog('time', moment(endTime.diff(startTime)).milliseconds() + ' ms'))
-    }
-    return answer
+    console.log(formatLog('answer', answer))
+  }
+  let endTime = moment()
+
+  if (output) {
+    console.log(formatLog('time', moment(endTime.diff(startTime)).milliseconds() + ' ms'))
+  }
+  return answer
 }

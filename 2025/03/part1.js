@@ -4,8 +4,8 @@ export const metadata = {
   "Puzzle Name": "Lobby"
 };
 
-const maxDigit = arr => 
-  arr.reduce((max, x) => 
+const maxDigit = arr =>
+  arr.reduce((max, x) =>
     (+x > +max ? x : max)
   );
 

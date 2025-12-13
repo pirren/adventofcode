@@ -6,13 +6,13 @@ export const metadata = {
 
 const parse = input => {
   return input.map(x => {
-      const dir = x[0] == 'L' ? -1 : 1;
-      const num = +x.slice(1);
-      return dir * num;
-    });
+    const dir = x[0] == 'L' ? -1 : 1;
+    const num = +x.slice(1);
+    return dir * num;
+  });
 };
 
-const turn = data => 
+const turn = data =>
   undefined
 
 export default pipe(

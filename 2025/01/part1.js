@@ -4,7 +4,7 @@ export const metadata = {
   "Puzzle Name": "Secret Entrance"
 };
 
-const parse = input => 
+const parse = input =>
   input
     .map(x => {
       const D = x[0] == 'L' ? -1 : 1;
@@ -23,7 +23,7 @@ const turn = data => {
 
   let password = 0;
 
-  for (let {D, N} of data) {
+  for (let { D, N } of data) {
     turn(D, N);
     if (dial == 0) {
       password++;

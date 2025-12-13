@@ -5,10 +5,10 @@ export const metadata = {
   "Puzzle Name": "Gift Shop"
 };
 
-export const parseRanges = input => 
+export const parseRanges = input =>
   input
     .split(',')
-    .map(rangeStr => 
+    .map(rangeStr =>
       rangeStr
         .split('-')
         .flatMap(ints)
@@ -20,7 +20,7 @@ const isMirroredId = id => {
   return s.slice(0, mid) === s.slice(mid); // left equals right
 };
 
-const expandRange = ([start, end]) => 
+const expandRange = ([start, end]) =>
   Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
 export const sumInvalidIds = filter => ranges =>

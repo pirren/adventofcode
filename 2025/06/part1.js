@@ -32,7 +32,6 @@ const solveAll = ({ numbers, operations }) =>
     )
   );
 
-
 export default pipe(
   parse,
   solveAll,
